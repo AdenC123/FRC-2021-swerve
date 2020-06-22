@@ -28,4 +28,8 @@ public final class Constants {
             LF_DRIVE = 7,
             LF_SPIN = 8;
     }
+
+    // length and width from center of the wheels, in cm (unit doesnt matter)
+    public static double DRIVE_LENGTH = 57.4;
+    public static double DRIVE_WIDTH = 57.7;
 }
