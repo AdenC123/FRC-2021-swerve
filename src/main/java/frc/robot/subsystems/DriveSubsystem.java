@@ -48,39 +48,6 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-   * Spin a module to a degree value.
-   * 
-   * @param module (String) 'RF', 'RR', 'LR', or 'LF'. TODO: find a better way to do this
-   * @param degrees (double) Degree value to spin to, between -180 and 180 degrees with 0 being straight forward.
-   */
-  public void setAngle(String module, double degrees) {
-    // TODO: this will require the analog encoders and PID
-    // run at full power (or gain value) towards correct angle
-  }
-
-  /**
-   * Set a module to a speed.
-   * 
-   * @param module (String) 'RF', 'RR', 'LR', or 'LF'. TODO: find a better way to do this
-   * @param speed (double) Speed to run at, from -1 to 1.
-   */
-  public void setSpeed(String module, double speed) {
-
-    // really hacky way to set the speed of a module
-    if (module == "RF") {
-      m_rf_drive.set(speed);
-    } else if (module == "RR") {
-      m_rr_drive.set(speed);
-    } else if (module == "LR") {
-      m_lr_drive.set(speed);
-    } else if (module == "LF") {
-      m_lf_drive.set(speed);
-    } else {
-      System.out.println("incorrect module name");
-    }
-  }
-
-  /**
    * Set speeds of all drive motors, in the order of RF, LF, LR and RR.
    * Speed is from -1 to 1.
    */
@@ -93,10 +60,11 @@ public class DriveSubsystem extends SubsystemBase {
 
   /**
    * Set angles of all drive motors, in the order of RF, LF, LR and RR.
-   * Angle is between -180 and 180 degrees.
+   * Angle is between -180 and 180 degrees, with 0 being straight forward.
    */
   public void setAngles(double rfAngle, double lfAngle, double lrAngle, double rrAngle) {
-    // TODO: this is a derivative of setAngle, which isn't made yet
+    // TODO: this will require the analog encoders and PID
+    // run at full power (or gain value) towards correct angle
   }
 
   /**
