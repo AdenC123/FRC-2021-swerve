@@ -68,7 +68,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-   * Used in SwerveTest. Sets all the drive motors to a speed.
+   * Sets all the drive motors to a speed.
    * 
    * @param speed Speed from -1 to 1.
    */
@@ -80,7 +80,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-   * Used in SwerveTest. Sets all the spin motors to a speed.
+   * Sets all the spin motors to a speed.
    * 
    * @param speed Speed from -1 to 1.
    */

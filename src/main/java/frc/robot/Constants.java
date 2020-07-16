@@ -29,6 +29,14 @@ public final class Constants {
             LF_SPIN = 8;
     }
 
+    public static final class AnalogPorts {
+        public static int
+            RF = 0,
+            RR = 1,
+            LR = 2,
+            LF = 3;
+    }
+
     // length and width from center of the wheels, in cm (unit doesnt matter)
     public static double DRIVE_LENGTH = 57.4;
     public static double DRIVE_WIDTH = 57.7;

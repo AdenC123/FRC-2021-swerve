@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,9 +24,20 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
-
+  
+  // Telemetry variables
   private double m_lastJoystickY = 0.0;
   private double m_lastJoystickX = 0.0;
+  private double m_lastAnalogRR = 0.0;
+  private double m_lastAnalogRF = 0.0;
+  private double m_lastAnalogLF = 0.0;
+  private double m_lastAnalogLR = 0.0;
+
+  // Analog potentiometers
+  private AnalogPotentiometer m_AnalogRR = new AnalogPotentiometer(Constants.AnalogPorts.RR);
+  private AnalogPotentiometer m_AnalogRF = new AnalogPotentiometer(Constants.AnalogPorts.RF);
+  private AnalogPotentiometer m_AnalogLR = new AnalogPotentiometer(Constants.AnalogPorts.LR);
+  private AnalogPotentiometer m_AnalogLF = new AnalogPotentiometer(Constants.AnalogPorts.LF);
 
   /**
    * Update telemetry feedback for a real number value. If the value has not changed, no update is sent
@@ -98,6 +111,10 @@ public class Robot extends TimedRobot {
   private void displayTelemetry() {
     m_lastJoystickX = dashboardTelemetry(0, "joyX", RobotContainer.getXbox().getX(), m_lastJoystickX);
     m_lastJoystickY = dashboardTelemetry(1, "joyY", RobotContainer.getXbox().getY(), m_lastJoystickY);
+    m_lastAnalogRR = dashboardTelemetry(2, "RR Analog", m_AnalogRR.get(), m_lastAnalogRR);
+    m_lastAnalogRF = dashboardTelemetry(3, "RF Analog", m_AnalogRF.get(), m_lastAnalogRF);
+    m_lastAnalogLR = dashboardTelemetry(4, "LR Analog", m_AnalogLR.get(), m_lastAnalogLR);
+    m_lastAnalogLF = dashboardTelemetry(5, "LF Analog", m_AnalogLF.get(), m_lastAnalogLF);
   }
 
   /**
