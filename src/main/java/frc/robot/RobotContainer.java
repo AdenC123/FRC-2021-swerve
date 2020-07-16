@@ -25,7 +25,7 @@ public class RobotContainer {
   private final SwerveTest m_swerveTest;
 
   // controllers
-  private final XboxController m_xbox = new XboxController(1);
+  private static final XboxController m_xbox = new XboxController(0);
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -63,5 +63,9 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
     return null;
+  }
+
+  public static XboxController getXbox() {
+    return m_xbox;
   }
 }

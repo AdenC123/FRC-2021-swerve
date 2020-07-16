@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -22,12 +23,95 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
+  private double m_lastJoystickY = 0.0;
+  private double m_lastJoystickX = 0.0;
+
+  /**
+   * Update telemetry feedback for a real number value. If the value has not changed, no update is sent
+   *
+   * @param port      (int) The port 0 - 9 to write to.
+   * @param key       (String) The key for the telemetry.
+   * @param var       (double) The number to be reported.
+   * @param lastValue (double) The last value reported.
+   * @return (double) Returns {@code var}
+   */
+  @SuppressWarnings("unused")
+  private double dashboardTelemetry(int port, String key, double var, double lastValue) {
+    if (var != lastValue) {
+      SmartDashboard.putString(String.format("DB/String %d", port), String.format("%s: %4.3f", key, var));
+    }
+    return var;
+  }
+
+  /**
+   * Update telemetry feedback for an integer value. If the value has not changed, no update is sent
+   *
+   * @param port      (int) The port 0 - 9 to write to.
+   * @param key       (String) The key for the telemetry.
+   * @param var       (int) The integer to be reported.
+   * @param lastValue (int) The last value reported.
+   * @return (int) Returns {@code var}
+   */
+  @SuppressWarnings("unused")
+  private int dashboardTelemetry(int port, String key, int var, int lastValue) {
+    if (var != lastValue) {
+      SmartDashboard.putString(String.format("DB/String %d", port), String.format("%s: %d", key, var));
+    }
+    return var;
+  }
+
+  /**
+   * Update telemetry feedback for a string value. If the value has not changed, no update is sent
+   *
+   * @param port      (int) The port 0 - 9 to write to.
+   * @param key       (String) The key for the telemetry.
+   * @param var       (String) The string to be reported.
+   * @param lastValue (String) The last value reported.
+   * @return (String) Returns {@code var}
+   */
+  @SuppressWarnings("unused")
+  private String dashboardTelemetry(int port, String key, String var, String lastValue) {
+    if (!var.equals(lastValue)) {
+      SmartDashboard.putString(String.format("DB/String %d", port), String.format("%s: %s", key, var));
+    }
+    return var;
+  }
+
+  /**
+   * Update telemetry feedback for a boolean value. If the value has not changed, no update is sent
+   *
+   * @param port      (int) The port 0 - 9 to write to.
+   * @param key       (String) The key for the telemetry.
+   * @param var       (boolean) The boolean to be reported.
+   * @param lastValue (boolean) The last value reported.
+   * @return (boolean) Returns {@code var}
+   */
+  @SuppressWarnings("unused")
+  private boolean dashboardTelemetry(int port, String key, boolean var, boolean lastValue) {
+    if (var != lastValue) {
+      SmartDashboard.putString(String.format("DB/String %d", port),
+          String.format("%s: %s", key, var ? "on" : "off"));
+    }
+    return var;
+  }
+
+  private void displayTelemetry() {
+    m_lastJoystickX = dashboardTelemetry(0, "joyX", RobotContainer.getXbox().getX(), m_lastJoystickX);
+    m_lastJoystickY = dashboardTelemetry(1, "joyY", RobotContainer.getXbox().getY(), m_lastJoystickY);
+  }
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   @Override
   public void robotInit() {
+
+    // empty the telemetry display
+    for (int i = 0; i < 10; i++) {
+      SmartDashboard.putString(String.format("DB/String %d", i), " ");
+    }
+
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
@@ -47,6 +131,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    displayTelemetry();
   }
 
   /**
