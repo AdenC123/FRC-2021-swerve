@@ -18,7 +18,7 @@ package frc.robot;
 public final class Constants {
 
     public static final class MotorControllers {
-        public static int
+        public static final int
             RF_DRIVE = 1,
             RF_SPIN = 2,
             RR_DRIVE = 3,
@@ -30,12 +30,22 @@ public final class Constants {
     }
 
     public static final class AnalogPorts {
-        public static int
+        public static final int
             RF = 0,
             RR = 1,
             LR = 2,
             LF = 3;
     }
+
+    public static final class CalibrationOffset {
+        public static final double
+            RF = 0.363,
+            RR = 0.982,
+            LR = 0.771,
+            LF = 0.853;
+    }
+
+    public static double MAX_DRIVE_VELOCITY = 5500;
 
     // length and width from center of the wheels, in cm (unit doesnt matter)
     public static double DRIVE_LENGTH = 57.4;

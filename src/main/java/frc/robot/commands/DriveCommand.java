@@ -68,9 +68,7 @@ public class DriveCommand extends CommandBase {
     double max=frSpeed; if(flSpeed>max)max=flSpeed; if(rlSpeed>max)max=rlSpeed; if(rrSpeed>max)max=rrSpeed; // oh god why
     if (max > 1) {frSpeed /= max; flSpeed /= max; rlSpeed /= max; rrSpeed /= max;}
 
-    // run wheels at speeds and angles
-    m_driveSubsystem.setSpeeds(frSpeed, flSpeed, rlSpeed, rrSpeed);
-    m_driveSubsystem.setAngles(frAngle, flAngle, rlAngle, rrAngle);
+    // run wheels at speeds and angles TODO
 
   }
 

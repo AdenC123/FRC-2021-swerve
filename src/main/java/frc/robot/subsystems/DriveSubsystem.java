@@ -12,82 +12,54 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.DriveModule;
 
 public class DriveSubsystem extends SubsystemBase {
 
-  // create motors
-  private CANSparkMax m_rf_drive = new CANSparkMax(Constants.MotorControllers.RF_DRIVE, MotorType.kBrushless);
-  private CANSparkMax m_rf_spin = new CANSparkMax(Constants.MotorControllers.RF_SPIN, MotorType.kBrushless);
-  private CANSparkMax m_rr_drive = new CANSparkMax(Constants.MotorControllers.RR_DRIVE, MotorType.kBrushless);
-  private CANSparkMax m_rr_spin = new CANSparkMax(Constants.MotorControllers.RR_SPIN, MotorType.kBrushless);
-  private CANSparkMax m_lr_drive = new CANSparkMax(Constants.MotorControllers.LR_DRIVE, MotorType.kBrushless);
-  private CANSparkMax m_lr_spin = new CANSparkMax(Constants.MotorControllers.LR_SPIN, MotorType.kBrushless);
-  private CANSparkMax m_lf_drive = new CANSparkMax(Constants.MotorControllers.LF_DRIVE, MotorType.kBrushless);
-  private CANSparkMax m_lf_spin = new CANSparkMax(Constants.MotorControllers.LF_SPIN, MotorType.kBrushless);
+  // create drive modules
+  private final DriveModule m_rf;
 
+  private final DriveModule m_rr;
+
+  private final DriveModule m_lf;
+
+  private final DriveModule m_lr;
   /**
    * Creates a new DriveSubsystem.
    */
   public DriveSubsystem() {
+    // Initialization Here
+    m_rf = new DriveModule(Constants.MotorControllers.RF_DRIVE, Constants.MotorControllers.RF_SPIN,
+    Constants.AnalogPorts.RF, Constants.CalibrationOffset.RF);
 
-    // restore all motors to factory default
-    m_rf_drive.restoreFactoryDefaults();
-    m_rf_spin.restoreFactoryDefaults();
-    m_rr_drive.restoreFactoryDefaults();
-    m_rr_spin.restoreFactoryDefaults();
-    m_lr_drive.restoreFactoryDefaults();
-    m_lr_spin.restoreFactoryDefaults();
-    m_lf_drive.restoreFactoryDefaults();
-    m_lf_spin.restoreFactoryDefaults();
+    m_rr = new DriveModule(Constants.MotorControllers.RR_DRIVE, Constants.MotorControllers.RR_SPIN,
+    Constants.AnalogPorts.RR, Constants.CalibrationOffset.RR);
 
+    m_lf = new DriveModule(Constants.MotorControllers.LF_DRIVE, Constants.MotorControllers.LF_SPIN,
+    Constants.AnalogPorts.LF, Constants.CalibrationOffset.LF);
+
+    m_lr = new DriveModule(Constants.MotorControllers.LR_DRIVE, Constants.MotorControllers.LR_SPIN,
+    Constants.AnalogPorts.LR, Constants.CalibrationOffset.LR);
+  }
+
+  public DriveModule getRFModule() {
+    return m_rf;
+  }
+
+  public DriveModule getRRModule() {
+    return m_rr;
+  }
+
+  public DriveModule getLFModule() {
+    return m_lf;
+  }
+
+  public DriveModule getLRModule() {
+    return m_lr;
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-  }
-
-  /**
-   * Set speeds of all drive motors, in the order of RF, LF, LR and RR.
-   * Speed is from -1 to 1.
-   */
-  public void setSpeeds(double rfSpeed, double lfSpeed, double lrSpeed, double rrSpeed) {
-    m_rf_drive.set(rfSpeed);
-    m_lf_drive.set(lfSpeed);
-    m_lr_drive.set(lrSpeed);
-    m_rr_drive.set(rrSpeed);
-  }
-
-  /**
-   * Set angles of all drive motors, in the order of RF, LF, LR and RR.
-   * Angle is between -180 and 180 degrees, with 0 being straight forward.
-   */
-  public void setAngles(double rfAngle, double lfAngle, double lrAngle, double rrAngle) {
-    // TODO: this will require the analog encoders and PID
-    // run at full power (or gain value) towards correct angle
-  }
-
-  /**
-   * Sets all the drive motors to a speed.
-   * 
-   * @param speed Speed from -1 to 1.
-   */
-  public void setAllDriveSpeed(double speed) {
-    m_rf_drive.set(speed);
-    m_rr_drive.set(speed);
-    m_lf_drive.set(speed);
-    m_lr_drive.set(speed);
-  }
-
-  /**
-   * Sets all the spin motors to a speed.
-   * 
-   * @param speed Speed from -1 to 1.
-   */
-  public void setAllSpinSpeed(double speed) {
-    m_rf_spin.set(speed);
-    m_rr_spin.set(speed);
-    m_lf_spin.set(speed);
-    m_lr_spin.set(speed);
   }
 }

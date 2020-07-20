@@ -26,18 +26,10 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
   
   // Telemetry variables
-  private double m_lastJoystickY = 0.0;
-  private double m_lastJoystickX = 0.0;
-  private double m_lastAnalogRR = 0.0;
-  private double m_lastAnalogRF = 0.0;
-  private double m_lastAnalogLF = 0.0;
-  private double m_lastAnalogLR = 0.0;
-
-  // Analog potentiometers
-  private AnalogPotentiometer m_AnalogRR = new AnalogPotentiometer(Constants.AnalogPorts.RR);
-  private AnalogPotentiometer m_AnalogRF = new AnalogPotentiometer(Constants.AnalogPorts.RF);
-  private AnalogPotentiometer m_AnalogLR = new AnalogPotentiometer(Constants.AnalogPorts.LR);
-  private AnalogPotentiometer m_AnalogLF = new AnalogPotentiometer(Constants.AnalogPorts.LF);
+  private double m_lastAnalogEncoder = 0.0;
+  private double m_lastSpinEncoder = 0.0;
+  private double m_lastDriveEncoder = 0.0;
+  private double m_lastSpinVelocity = 0.0;
 
   /**
    * Update telemetry feedback for a real number value. If the value has not changed, no update is sent
@@ -109,12 +101,14 @@ public class Robot extends TimedRobot {
   }
 
   private void displayTelemetry() {
-    m_lastJoystickX = dashboardTelemetry(0, "joyX", RobotContainer.getXbox().getX(), m_lastJoystickX);
-    m_lastJoystickY = dashboardTelemetry(1, "joyY", RobotContainer.getXbox().getY(), m_lastJoystickY);
-    m_lastAnalogRR = dashboardTelemetry(2, "RR Analog", m_AnalogRR.get(), m_lastAnalogRR);
-    m_lastAnalogRF = dashboardTelemetry(3, "RF Analog", m_AnalogRF.get(), m_lastAnalogRF);
-    m_lastAnalogLR = dashboardTelemetry(4, "LR Analog", m_AnalogLR.get(), m_lastAnalogLR);
-    m_lastAnalogLF = dashboardTelemetry(5, "LF Analog", m_AnalogLF.get(), m_lastAnalogLF);
+    m_lastAnalogEncoder = dashboardTelemetry(0, "Analog Encoder",
+      RobotContainer.m_activeModule.getAnalogEncoder(), m_lastAnalogEncoder);
+    m_lastSpinEncoder = dashboardTelemetry(1, "Spin Encoder",
+      RobotContainer.m_activeModule.getSpinEncoder().getPosition(), m_lastSpinEncoder);
+    m_lastDriveEncoder = dashboardTelemetry(2, "Drive Encoder",
+      RobotContainer.m_activeModule.getDriveEncoder().getPosition(), m_lastDriveEncoder);
+    m_lastSpinVelocity = dashboardTelemetry(3, "Spin Velocity",
+      RobotContainer.m_activeModule.getSpinEncoder().getVelocity(), m_lastSpinVelocity);
   }
 
   /**
