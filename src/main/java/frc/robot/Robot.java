@@ -28,6 +28,9 @@ public class Robot extends TimedRobot {
   private double m_lastSpinEncoder = 0.0;
   private double m_lastDriveEncoder = 0.0;
   private double m_lastSpinVelocity = 0.0;
+  private double m_lastSpinkP = Constants.SPIN_kP;
+  private double m_lastSpinkI = Constants.SPIN_kI;
+  private double m_lastStickAngle = 0.0;
 
   /**
    * Update telemetry feedback for a real number value. If the value has not changed, no update is sent
@@ -107,6 +110,10 @@ public class Robot extends TimedRobot {
       RobotContainer.m_activeModule.getDriveEncoder().getPosition(), m_lastDriveEncoder);
     m_lastSpinVelocity = dashboardTelemetry(3, "Spin Velocity",
       RobotContainer.m_activeModule.getSpinEncoder().getVelocity(), m_lastSpinVelocity);
+    
+    m_lastSpinkP = dashboardTelemetry(5, "Spin kP", Constants.SPIN_kP, m_lastSpinkP);
+    m_lastSpinkI = dashboardTelemetry(6, "Spin kI", Constants.SPIN_kI, m_lastSpinkI);
+    
   }
 
   /**

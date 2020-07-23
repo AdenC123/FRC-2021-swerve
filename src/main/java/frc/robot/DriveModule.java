@@ -10,6 +10,7 @@ package frc.robot;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANPIDController;
 
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 
@@ -24,6 +25,7 @@ public class DriveModule {
     private final CANEncoder m_spinEncoder;
     private final AnalogPotentiometer m_analogEncoder;
     private final double m_calibrationOffset;
+    private CANPIDController m_spinPID;
 
     /**
      * Creates a new DriveModule. Ports should be for the same wheel.
@@ -41,11 +43,23 @@ public class DriveModule {
         m_driveMotor.restoreFactoryDefaults();
         m_spinMotor.restoreFactoryDefaults();
 
-        m_driveEncoder = new CANEncoder(m_driveMotor);
-        m_spinEncoder = new CANEncoder(m_spinMotor);
+        m_driveEncoder = m_driveMotor.getEncoder();
+        m_spinEncoder = m_spinMotor.getEncoder();
         m_analogEncoder = new AnalogPotentiometer(analogPort);
 
         m_calibrationOffset = calibrationOffset;
+
+        // Create and update PID contoller for spin motor
+        m_spinPID = m_spinMotor.getPIDController();
+        setSpinPID();
+    }
+
+    /**
+     * Updates CANPIDContoller object using values in constants file.
+     */
+    public void setSpinPID() {
+        m_spinPID.setP(Constants.SPIN_kP);
+        m_spinPID.setI(Constants.SPIN_kI);
     }
 
     /**
@@ -60,6 +74,13 @@ public class DriveModule {
      */
     public CANEncoder getSpinEncoder() {
         return m_spinEncoder;
+    }
+
+    /**
+     * Returns the CANPIDController object for the spin motor.
+     */
+    public CANPIDController getSpinPID() {
+        return m_spinPID;
     }
 
     /**
