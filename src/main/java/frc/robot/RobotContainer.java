@@ -11,9 +11,6 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.robot.commands.SwerveTest;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.commands.SetActiveModule;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -22,11 +19,6 @@ import frc.robot.commands.SetActiveModule;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-
-  private final DriveSubsystem m_driveSubsystem;
-  private final SwerveTest m_swerveTest;
-
-  public static DriveModule m_activeModule;
 
   // controllers
   private static final XboxController m_xbox = new XboxController(0);
@@ -44,14 +36,10 @@ public class RobotContainer {
   public RobotContainer() {
 
     // subsystems
-    m_driveSubsystem = new DriveSubsystem();
-    m_activeModule = m_driveSubsystem.getRRModule();
 
     // commands
-    m_swerveTest = new SwerveTest(m_xbox, m_driveSubsystem);
 
     // set default commands
-    m_driveSubsystem.setDefaultCommand(m_swerveTest);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -64,10 +52,6 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    m_xboxDpadRight.whenPressed(new SetActiveModule(m_driveSubsystem.getRRModule()));
-    m_xboxDpadUp.whenPressed(new SetActiveModule(m_driveSubsystem.getRFModule()));
-    m_xboxDpadLeft.whenPressed(new SetActiveModule(m_driveSubsystem.getLFModule()));
-    m_xboxDpadDown.whenPressed(new SetActiveModule(m_driveSubsystem.getLRModule()));
   }
 
 
