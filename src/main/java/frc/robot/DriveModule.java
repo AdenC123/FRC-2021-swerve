@@ -52,6 +52,8 @@ public class DriveModule {
         // Create and update PID contoller for spin motor
         m_spinPID = m_spinMotor.getPIDController();
         setSpinPID();
+
+        calibrate(); // reset spin encoder to forward
     }
 
     /**
@@ -100,10 +102,11 @@ public class DriveModule {
     }
 
     /**
-     * Set the wheel angle to straight and reset the NEO spin encoder.
+     * Set the NEO spin encoder value using the analog encoder, so that forward is 0 rotations.
      */
     public void calibrate() {
-
+        // (offset - actual) * 360 / 20
+        m_spinEncoder.setPosition((m_calibrationOffset - m_analogEncoder.get()) * 18);
     }
 
     public void setAngleAndSpeed(float angle, float speed) {

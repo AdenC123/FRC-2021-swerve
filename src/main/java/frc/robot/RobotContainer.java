@@ -19,6 +19,7 @@ import frc.robot.commands.BumpSpinkI;
 import frc.robot.commands.BumpSpinkP;
 import frc.robot.commands.SetActiveModule;
 import frc.robot.commands.SpinTest;
+import frc.robot.commands.SpinToDegrees;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -43,6 +44,10 @@ public class RobotContainer {
   private final POVButton m_xboxDpadLeft = new POVButton(m_xbox, 270);
   private final POVButton m_xboxDpadDown = new POVButton(m_xbox, 180);
   private final POVButton m_xboxDpadRight = new POVButton(m_xbox, 90);
+  private final JoystickButton m_xboxA = new JoystickButton(m_xbox, 1);
+  private final JoystickButton m_xboxB = new JoystickButton(m_xbox, 2);
+  private final JoystickButton m_xboxX = new JoystickButton(m_xbox, 3);
+  private final JoystickButton m_xboxY = new JoystickButton(m_xbox, 4);
 
   private final JoystickButton m_button3 = new JoystickButton(m_stick, 3);
   private final JoystickButton m_button4 = new JoystickButton(m_stick, 4);
@@ -63,7 +68,7 @@ public class RobotContainer {
     m_spinTest = new SpinTest(m_stick, m_driveSubsystem);
 
     // set default commands
-    m_driveSubsystem.setDefaultCommand(m_spinTest);
+    //m_driveSubsystem.setDefaultCommand(m_spinTest);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -84,10 +89,16 @@ public class RobotContainer {
     m_xboxDpadDown.whenPressed(new SetActiveModule(m_driveSubsystem.getLRModule()));
 
     // adjust kP and kI with top buttons
-    m_button3.whenPressed(new BumpSpinkP(-0.1));
-    m_button5.whenPressed(new BumpSpinkP(0.1));
-    m_button4.whenPressed(new BumpSpinkI(-0.01));
-    m_button6.whenPressed(new BumpSpinkI(0.01));
+    m_button3.whenPressed(new BumpSpinkP(-0.01));
+    m_button5.whenPressed(new BumpSpinkP(0.01));
+    m_button4.whenPressed(new BumpSpinkI(-0.001));
+    m_button6.whenPressed(new BumpSpinkI(0.001));
+
+    // set degrees with xbox buttons
+    m_xboxY.whenPressed(new SpinToDegrees(0, m_driveSubsystem));
+    m_xboxB.whenPressed(new SpinToDegrees(90, m_driveSubsystem));
+    m_xboxX.whenPressed(new SpinToDegrees(-90, m_driveSubsystem));
+    m_xboxA.whenPressed(new SpinToDegrees(-180, m_driveSubsystem));
   }
 
 
