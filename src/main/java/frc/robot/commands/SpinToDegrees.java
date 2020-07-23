@@ -32,8 +32,7 @@ public class SpinToDegrees extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    double rotations = m_degrees / 20;
-    RobotContainer.m_activeModule.getSpinPID().setReference(rotations, ControlType.kPosition);
+    RobotContainer.m_activeModule.setAngleAndSpeed(m_degrees, 0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -18,7 +18,6 @@ public class SpinTest extends CommandBase {
 
   private final DriveSubsystem m_driveSubsystem;
   private final Joystick m_stick;
-  private double m_stickAngle;
 
   /**
    * Angles the active module to the same angle as the joystick.
@@ -39,13 +38,14 @@ public class SpinTest extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // calculate stick angle
-    m_stickAngle = Math.atan2(m_stick.getY(), m_stick.getX()); // y may need to be negative?
-    // convert to rotations
-    double degrees = Math.toDegrees(m_stickAngle);
-    double rotations = degrees / 20;
-    // set wheel angle
-    RobotContainer.m_activeModule.getSpinPID().setReference(rotations, ControlType.kPosition);
+    double stickY = -m_stick.getY();
+    double stickX = m_stick.getX();
+    if (stickY*stickY + stickX*stickX > 0.1) {
+      // calculate stick angle
+      double stickAngle = Math.atan2(stickX, stickY);
+      stickAngle = Math.toDegrees(stickAngle);
+      RobotContainer.m_activeModule.setAngleAndSpeed(stickAngle, 0);
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -57,9 +57,5 @@ public class SpinTest extends CommandBase {
   @Override
   public boolean isFinished() {
     return false;
-  }
-
-  public double getStickAngle() {
-    return m_stickAngle;
   }
 }

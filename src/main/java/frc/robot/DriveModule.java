@@ -9,6 +9,7 @@ package frc.robot;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANPIDController;
 
@@ -26,6 +27,9 @@ public class DriveModule {
     private final AnalogPotentiometer m_analogEncoder;
     private final double m_calibrationOffset;
     private CANPIDController m_spinPID;
+    private double m_mult = 1;
+    private double m_lastAngle;
+    private double m_lastTics;
 
     /**
      * Creates a new DriveModule. Ports should be for the same wheel.
@@ -54,6 +58,9 @@ public class DriveModule {
         setSpinPID();
 
         calibrate(); // reset spin encoder to forward
+        m_spinPID.setReference(0, ControlType.kPosition);
+        m_lastAngle = 0;
+        m_lastTics = 0;
     }
 
     /**
@@ -109,8 +116,17 @@ public class DriveModule {
         m_spinEncoder.setPosition((m_calibrationOffset - m_analogEncoder.get()) * 18);
     }
 
-    public void setAngleAndSpeed(float angle, float speed) {
-        // TODO: write me
-        return;
+    public void setAngleAndSpeed(double targetAngle, double speed) {
+        double deltaAngle = targetAngle - m_lastAngle;
+        if (deltaAngle > 180) {
+            deltaAngle -= 360;
+        } else if (deltaAngle < -180) {
+            deltaAngle += 360;
+        }
+        double deltaTics = deltaAngle / 20;
+        double newTics = m_lastTics - deltaTics;
+        m_spinPID.setReference(newTics, ControlType.kPosition);
+        m_lastTics = newTics;
+        m_lastAngle = targetAngle;
     }
 }

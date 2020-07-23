@@ -68,7 +68,7 @@ public class RobotContainer {
     m_spinTest = new SpinTest(m_stick, m_driveSubsystem);
 
     // set default commands
-    //m_driveSubsystem.setDefaultCommand(m_spinTest);
+    m_driveSubsystem.setDefaultCommand(m_spinTest);
 
     // Configure the button bindings
     configureButtonBindings();
