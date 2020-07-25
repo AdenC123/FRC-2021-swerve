@@ -15,8 +15,12 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.SwerveTest;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.commands.BumpDrivekFF;
+import frc.robot.commands.BumpDrivekI;
+import frc.robot.commands.BumpDrivekP;
 import frc.robot.commands.BumpSpinkI;
 import frc.robot.commands.BumpSpinkP;
+import frc.robot.commands.DriveTest;
 import frc.robot.commands.SetActiveModule;
 import frc.robot.commands.SpinTest;
 import frc.robot.commands.SpinToDegrees;
@@ -31,7 +35,8 @@ public class RobotContainer {
 
   private final DriveSubsystem m_driveSubsystem;
   //private final SwerveTest m_swerveTest;
-  private final SpinTest m_spinTest;
+  //private final SpinTest m_spinTest;
+  private final DriveTest m_driveTest;
 
   public static DriveModule m_activeModule; // this probably shouldn't be static but its a test program so whatever
 
@@ -53,6 +58,12 @@ public class RobotContainer {
   private final JoystickButton m_button4 = new JoystickButton(m_stick, 4);
   private final JoystickButton m_button5 = new JoystickButton(m_stick, 5);
   private final JoystickButton m_button6 = new JoystickButton(m_stick, 6);
+  private final JoystickButton m_button7 = new JoystickButton(this.m_stick, 7);
+  private final JoystickButton m_button8 = new JoystickButton(this.m_stick, 8);
+  private final JoystickButton m_button9 = new JoystickButton(this.m_stick, 9);
+  private final JoystickButton m_button10 = new JoystickButton(this.m_stick, 10);
+  private final JoystickButton m_button11 = new JoystickButton(this.m_stick, 11);
+  private final JoystickButton m_button12 = new JoystickButton(this.m_stick, 12);
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -61,14 +72,15 @@ public class RobotContainer {
 
     // subsystems
     m_driveSubsystem = new DriveSubsystem();
-    m_activeModule = m_driveSubsystem.getRRModule();
+    m_activeModule = m_driveSubsystem.getLFModule();
 
     // commands
     //m_swerveTest = new SwerveTest(m_xbox, m_driveSubsystem);
-    m_spinTest = new SpinTest(m_stick, m_driveSubsystem);
+    //m_spinTest = new SpinTest(m_stick, m_driveSubsystem);
+    m_driveTest = new DriveTest(m_stick, m_driveSubsystem);
 
     // set default commands
-    m_driveSubsystem.setDefaultCommand(m_spinTest);
+    // m_driveSubsystem.setDefaultCommand(m_driveTest);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -89,10 +101,19 @@ public class RobotContainer {
     m_xboxDpadDown.whenPressed(new SetActiveModule(m_driveSubsystem.getLRModule()));
 
     // adjust kP and kI with top buttons
+    /*
     m_button3.whenPressed(new BumpSpinkP(-0.01));
     m_button5.whenPressed(new BumpSpinkP(0.01));
     m_button4.whenPressed(new BumpSpinkI(-0.001));
     m_button6.whenPressed(new BumpSpinkI(0.001));
+    */
+    m_button7.whenPressed(new BumpDrivekP(-0.00001));
+    m_button8.whenPressed(new BumpDrivekP(0.00001));
+    m_button9.whenPressed(new BumpDrivekI(-0.000001));
+    m_button10.whenPressed(new BumpDrivekI(0.000001));
+    m_button11.whenPressed(new BumpDrivekFF(-0.000001));
+    m_button12.whenPressed(new BumpDrivekFF(0.000001));
+    
 
     // set degrees with xbox buttons
     m_xboxY.whenPressed(new SpinToDegrees(0, m_driveSubsystem));

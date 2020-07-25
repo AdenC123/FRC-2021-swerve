@@ -27,6 +27,7 @@ public class DriveModule {
     private final AnalogPotentiometer m_analogEncoder;
     private final double m_calibrationOffset;
     private CANPIDController m_spinPID;
+    private CANPIDController m_drivePID;
     private double m_mult = 1;
     private double m_lastAngle;
     private double m_lastTics;
@@ -53,9 +54,11 @@ public class DriveModule {
 
         m_calibrationOffset = calibrationOffset;
 
-        // Create and update PID contoller for spin motor
+        // Create and update PID contollers for spin and drive motors
         m_spinPID = m_spinMotor.getPIDController();
         setSpinPID();
+        m_drivePID = m_driveMotor.getPIDController();
+        setDrivePID();
 
         calibrate(); // reset spin encoder to forward
         m_spinPID.setReference(0, ControlType.kPosition);
@@ -69,6 +72,15 @@ public class DriveModule {
     public void setSpinPID() {
         m_spinPID.setP(Constants.SPIN_kP);
         m_spinPID.setI(Constants.SPIN_kI);
+    }
+
+    public void setDrivePID() {
+        m_drivePID.setP(Constants.DRIVE_kP);
+        m_drivePID.setI(Constants.DRIVE_kI);
+        m_drivePID.setFF(Constants.DRIVE_kFF);
+        m_drivePID.setOutputRange(Constants.DRIVE_kMIN, Constants.DRIVE_kMAX);
+        m_drivePID.setD(0);
+        m_drivePID.setIZone(0);
     }
 
     /**
@@ -116,6 +128,11 @@ public class DriveModule {
         m_spinEncoder.setPosition((m_calibrationOffset - m_analogEncoder.get()) * 18);
     }
 
+    /**
+     * Set the PID controller of the module to a target angle.
+     * @param targetAngle From -180 and 180 degrees.
+     * @param speed From -1 to 1.
+     */
     public void setAngleAndSpeed(double targetAngle, double speed) {
         double deltaAngle = targetAngle - m_lastAngle;
         if (deltaAngle > 180) {
@@ -128,5 +145,8 @@ public class DriveModule {
         m_spinPID.setReference(newTics, ControlType.kPosition);
         m_lastTics = newTics;
         m_lastAngle = targetAngle;
+
+        speed *= Constants.MAX_DRIVE_VELOCITY;
+        m_drivePID.setReference(speed, ControlType.kVelocity);
     }
 }

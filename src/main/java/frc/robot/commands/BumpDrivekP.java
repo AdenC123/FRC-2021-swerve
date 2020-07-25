@@ -8,28 +8,28 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.DriveModule;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
-public class SetActiveModule extends CommandBase {
+public class BumpDrivekP extends CommandBase {
 
-  private DriveModule m_activeModule;
+  private final double m_inc;
 
   /**
-   * Creates a new SetActiveModule.
+   * Creates a new BumpDrivekP.
    */
-  public SetActiveModule(DriveModule activeModule) {
+  public BumpDrivekP(double inc) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_activeModule = activeModule;
-    
+    m_inc = inc;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.m_activeModule = m_activeModule;
-    m_activeModule.setSpinPID();
-    m_activeModule.setDrivePID();
+    if (Constants.DRIVE_kP + m_inc >= 0) {
+      Constants.DRIVE_kP += m_inc;
+    }
+    RobotContainer.m_activeModule.setDrivePID();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
