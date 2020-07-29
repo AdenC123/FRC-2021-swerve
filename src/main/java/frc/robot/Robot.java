@@ -104,18 +104,7 @@ public class Robot extends TimedRobot {
     return var;
   }
 
-  private void displayTelemetry() {
-    m_lastAnalogEncoder = dashboardTelemetry(0, "Analog Enc",
-      RobotContainer.m_activeModule.getAnalogEncoder(), m_lastAnalogEncoder);
-    m_lastSpinEncoder = dashboardTelemetry(1, "Spin Enc",
-      RobotContainer.m_activeModule.getSpinEncoder().getPosition(), m_lastSpinEncoder);
-    m_lastDriveEncoder = dashboardTelemetry(2, "Drive Enc",
-      RobotContainer.m_activeModule.getDriveEncoder().getPosition(), m_lastDriveEncoder);
-    m_lastSpinVelocity = dashboardTelemetry(3, "Spin Vel",
-      RobotContainer.m_activeModule.getSpinEncoder().getVelocity(), m_lastSpinVelocity);
-    m_lastDriveVelocity = dashboardTelemetry(4, "Drive Vel",
-      RobotContainer.m_activeModule.getDriveEncoder().getVelocity(), m_lastDriveVelocity);
-    
+  private void displayTelemetry() { 
     m_lastDrivekP = dashboardTelemetry(5, "Drive kP", Constants.DRIVE_kP, m_lastDrivekP);
     m_lastDrivekI = dashboardTelemetry(6, "Drive kI", Constants.DRIVE_kI, m_lastDrivekI);
     m_lastDrivekFF = dashboardTelemetry(7, "Drive kFF", Constants.DRIVE_kFF, m_lastDrivekFF);
