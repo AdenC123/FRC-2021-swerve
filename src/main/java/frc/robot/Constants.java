@@ -51,7 +51,7 @@ public final class Constants {
     public static double DRIVE_LENGTH = 57.4;
     public static double DRIVE_WIDTH = 57.7;
 
-    // Spin motor PID values for testing only. Once found, should be set permanently using Spark client app.
+    // PID values
     public static double SPIN_kP = 0.25;
     public static double SPIN_kI = 0;
 
