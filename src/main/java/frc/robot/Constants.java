@@ -63,7 +63,7 @@ public final class Constants {
 
     // used in DriveCommand
     public static double DRIVE_DEADBAND = 0.1;
-    public static double DRIVE_SPEED_SENSITIVTY = 3;
+    public static double DRIVE_SPEED_SENSITIVTY = 2;
     public static double DRIVE_SPEED_GAIN = 0.5;
 
     public static double TWIST_SENSITIVITY = 2;
