@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class DriveCommand extends CommandBase {
@@ -34,10 +35,33 @@ public class DriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double fwd = -m_stick.getY();
-    double str = m_stick.getX();
-    double rcw = m_stick.getTwist();
-    m_driveSubsystem.swerveDrive(fwd, str, rcw);
+    // get stick values
+    double stickY = -m_stick.getY();
+    double stickX = m_stick.getX();
+    double stickTwist = m_stick.getTwist();
+    // do deadband on speed
+    double distance = Math.sqrt(stickY*stickY + stickX*stickX);
+    double speed;
+    if (distance < Constants.DRIVE_DEADBAND) {
+      speed = 0;
+    } else {
+      speed = (distance - Constants.DRIVE_DEADBAND) / (1 - Constants.DRIVE_DEADBAND);
+    }
+    // add gain and sensitivity
+    speed = Math.pow(speed, Constants.DRIVE_SPEED_SENSITIVTY) * Constants.DRIVE_SPEED_GAIN;
+    // do deadband on rotation
+    double rotation;
+    if (Math.abs(stickTwist) < Constants.DRIVE_DEADBAND) {
+      rotation = 0;
+    } else if (stickTwist > 0) {
+      rotation = (stickTwist - Constants.DRIVE_DEADBAND) / (1 - Constants.DRIVE_DEADBAND);
+    } else {
+      rotation = (stickTwist + Constants.DRIVE_DEADBAND) / (1 - Constants.DRIVE_DEADBAND);
+    }
+    // find direction, if the speed is 0 then it won't rotate
+    double direction = Math.atan2(stickX, stickY);
+    m_driveSubsystem.swerveDrive(direction, speed, rotation);
+    
   }
 
   // Called once the command ends or is interrupted.

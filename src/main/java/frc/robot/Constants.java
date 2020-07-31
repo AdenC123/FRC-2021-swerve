@@ -60,4 +60,12 @@ public final class Constants {
     public static double DRIVE_kFF = 0.000170;
     public static double DRIVE_kMIN = -1;
     public static double DRIVE_kMAX = 1;
+
+    // used in DriveCommand
+    public static double DRIVE_DEADBAND = 0.05;
+    public static double DRIVE_SPEED_SENSITIVTY = 1;
+    public static double DRIVE_SPEED_GAIN = 1;
+
+    // small number for zero check
+    public static final double SMALL = 0.000001;
 }

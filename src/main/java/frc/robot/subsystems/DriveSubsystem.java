@@ -15,12 +15,16 @@ public class DriveSubsystem extends SubsystemBase {
 
   // create drive modules
   private final DriveModule m_rf;
-
   private final DriveModule m_rr;
-
   private final DriveModule m_lf;
-
   private final DriveModule m_lr;
+
+  // keep track of last angles
+  private double m_lastRFAngle = 0.0;
+  private double m_lastRRAngle = 0.0;
+  private double m_lastLFAngle = 0.0;
+  private double m_lastLRAngle = 0.0;
+  
   /**
    * Creates a new DriveSubsystem.
    */
@@ -56,13 +60,13 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-   * Drives the robot using all 4 modules.
+   * Swerve drive with a foward, strafe and rotate.
    * @param fwd Drive forward. From -1 to 1.
    * @param str Strafe right. From -1 to 1.
    * @param rcw Clockwise rotation. From -1 to 1.
    */
-  public void swerveDrive(double fwd, double str, double rcw) {
-    
+  public void swerveDriveComponents(double fwd, double str, double rcw) {
+
     // length, width and diagonal
     double length = Constants.DRIVE_LENGTH;
     double width = Constants.DRIVE_WIDTH;
@@ -80,10 +84,11 @@ public class DriveSubsystem extends SubsystemBase {
     double lrSpeed = Math.sqrt(a*a + d*d);
     double rrSpeed = Math.sqrt(a*a + c*c);
 
-    double rfAngle = Math.atan2(b, c) * (180/Math.PI);
-    double lfAngle = Math.atan2(b, d) * (180/Math.PI);
-    double lrAngle = Math.atan2(a, d) * (180/Math.PI);
-    double rrAngle = Math.atan2(a, c) * (180/Math.PI);
+    // if speed is small or 0, don't change angle
+    double rfAngle = (rfSpeed < Constants.SMALL) ? m_lastRFAngle : Math.atan2(b, c) * (180/Math.PI);
+    double lfAngle = (lfSpeed < Constants.SMALL) ? m_lastLFAngle : Math.atan2(b, d) * (180/Math.PI);
+    double lrAngle = (lrSpeed < Constants.SMALL) ? m_lastLRAngle : Math.atan2(a, d) * (180/Math.PI);
+    double rrAngle = (rrSpeed < Constants.SMALL) ? m_lastRRAngle : Math.atan2(a, c) * (180/Math.PI);
 
     // normalize speeds TODO: make this not look like shit
     double max=rfSpeed; if(lfSpeed>max)max=lfSpeed; if(lrSpeed>max)max=lrSpeed; if(rrSpeed>max)max=rrSpeed;
@@ -94,6 +99,24 @@ public class DriveSubsystem extends SubsystemBase {
     m_lf.setAngleAndSpeed(lfAngle, lfSpeed);
     m_lr.setAngleAndSpeed(lrAngle, lrSpeed);
     m_rr.setAngleAndSpeed(rrAngle, rrSpeed);
+
+    m_lastRFAngle = rfAngle;
+    m_lastLFAngle = lfAngle;
+    m_lastLRAngle = lrAngle;
+    m_lastRRAngle = rrAngle;
+  }
+
+  /**
+   * Swerve drive with a direction (angle), a speed and a rotation.
+   * @param direction Angle from -180 to 180 degrees.
+   * @param speed Speed from 0 to 1.
+   * @param rotation Clockwise rotation speed from -1 to 1.
+   */
+  public void swerveDrive(double direction, double speed, double rotation) {
+    double fwd = Math.cos(direction) * speed;
+    double str = Math.sin(direction) * speed;
+    double rcw = rotation;
+    swerveDriveComponents(fwd, str, rcw);
   }
 
   @Override
