@@ -41,6 +41,8 @@ public class DriveCommandXbox extends CommandBase {
     double stickY = -m_xbox.getY(GenericHID.Hand.kLeft);
     double stickX = m_xbox.getX(GenericHID.Hand.kLeft);
     double stickTwist = m_xbox.getX(GenericHID.Hand.kRight);
+    int rotMult = (stickTwist < 0) ? -1 : 1;
+    stickTwist = Math.abs(stickTwist);
     // do deadband on speed
     double distance = Math.sqrt(stickY*stickY + stickX*stickX);
     double speed;
@@ -53,13 +55,13 @@ public class DriveCommandXbox extends CommandBase {
     speed = Math.pow(speed, Constants.DRIVE_SPEED_SENSITIVTY) * Constants.DRIVE_SPEED_GAIN;
     // do deadband on rotation
     double rotation;
-    if (Math.abs(stickTwist) < Constants.DRIVE_DEADBAND) {
+    if (stickTwist < Constants.DRIVE_DEADBAND) {
       rotation = 0;
-    } else if (stickTwist > 0) {
-      rotation = (stickTwist - Constants.DRIVE_DEADBAND) / (1 - Constants.DRIVE_DEADBAND);
     } else {
-      rotation = (stickTwist + Constants.DRIVE_DEADBAND) / (1 - Constants.DRIVE_DEADBAND);
+      rotation = (stickTwist - Constants.DRIVE_DEADBAND) / (1 - Constants.DRIVE_DEADBAND);
     }
+    // add sensitivity, gain and sign
+    rotation = Math.pow(rotation, Constants.TWIST_SENSITIVITY) * Constants.TWIST_GAIN * rotMult;
     // find direction, if the speed is 0 then it won't rotate
     double direction = Math.atan2(stickX, stickY);
     m_driveSubsystem.swerveDrive(direction, speed, rotation);
