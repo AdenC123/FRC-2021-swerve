@@ -39,7 +39,7 @@ public final class Constants {
 
     public static final class CalibrationOffset {
         public static final double
-            RF = 0.363,
+            RF = 0.911,
             RR = 0.982,
             LR = 0.771,
             LF = 0.853;
@@ -62,7 +62,7 @@ public final class Constants {
     public static double DRIVE_kMAX = 1;
 
     // used in DriveCommand
-    public static double DRIVE_DEADBAND = 0.05;
+    public static double DRIVE_DEADBAND = 0.1;
     public static double DRIVE_SPEED_SENSITIVTY = 1;
     public static double DRIVE_SPEED_GAIN = 1;
 

@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.DriveCommandXbox;
 import frc.robot.subsystems.DriveSubsystem;
 
 /**
@@ -25,7 +26,8 @@ import frc.robot.subsystems.DriveSubsystem;
 public class RobotContainer {
 
   private final DriveSubsystem m_driveSubsystem;
-  private final DriveCommand m_driveCommand;
+  //private final DriveCommand m_driveCommand;
+  private final DriveCommandXbox m_driveCommandXbox;
 
   // controllers
   private final XboxController m_xbox = new XboxController(0);
@@ -61,10 +63,12 @@ public class RobotContainer {
     m_driveSubsystem = new DriveSubsystem();
 
     // commands
-    m_driveCommand = new DriveCommand(m_stick, m_driveSubsystem);
+    //m_driveCommand = new DriveCommand(m_stick, m_driveSubsystem);
+    m_driveCommandXbox = new DriveCommandXbox(m_xbox, m_driveSubsystem);
 
     // set default commands
-    m_driveSubsystem.setDefaultCommand(m_driveCommand);
+    //m_driveSubsystem.setDefaultCommand(m_driveCommand);
+    m_driveSubsystem.setDefaultCommand(m_driveCommandXbox);
 
     // Configure the button bindings
     configureButtonBindings();
