@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.Utl;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class DriveCommandXbox extends CommandBase {
@@ -41,24 +42,24 @@ public class DriveCommandXbox extends CommandBase {
     double stickY = -m_xbox.getY(GenericHID.Hand.kLeft);
     double stickX = m_xbox.getX(GenericHID.Hand.kLeft);
     double stickTwist = m_xbox.getX(GenericHID.Hand.kRight);
-    int rotMult = (stickTwist < 0) ? -1 : 1;
+    double rotMult = (stickTwist < 0.0) ? -1.0 : 1.0;
     stickTwist = Math.abs(stickTwist);
     // do deadband on speed
-    double distance = Math.sqrt(stickY*stickY + stickX*stickX);
+    double distance = Utl.length(stickY,stickX);
     double speed;
     if (distance < Constants.DRIVE_DEADBAND) {
-      speed = 0;
+      speed = 0.0;
     } else {
-      speed = (distance - Constants.DRIVE_DEADBAND) / (1 - Constants.DRIVE_DEADBAND);
+      speed = (distance - Constants.DRIVE_DEADBAND) / (1.0 - Constants.DRIVE_DEADBAND);
     }
     // add gain and sensitivity
-    speed = Math.pow(speed, Constants.DRIVE_SPEED_SENSITIVTY) * Constants.DRIVE_SPEED_GAIN;
+    speed = Math.pow(speed, Constants.DRIVE_SPEED_SENSITIVITY) * Constants.DRIVE_SPEED_GAIN;
     // do deadband on rotation
     double rotation;
-    if (stickTwist < Constants.DRIVE_DEADBAND) {
-      rotation = 0;
+    if (stickTwist < Constants.TWIST_DEADBAND) {
+      rotation = 0.0;
     } else {
-      rotation = (stickTwist - Constants.DRIVE_DEADBAND) / (1 - Constants.DRIVE_DEADBAND);
+      rotation = (stickTwist - Constants.TWIST_DEADBAND) / (1.0 - Constants.TWIST_DEADBAND);
     }
     // add sensitivity, gain and sign
     rotation = Math.pow(rotation, Constants.TWIST_SENSITIVITY) * Constants.TWIST_GAIN * rotMult;

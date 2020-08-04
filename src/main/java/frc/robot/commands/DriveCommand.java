@@ -45,18 +45,18 @@ public class DriveCommand extends CommandBase {
     if (distance < Constants.DRIVE_DEADBAND) {
       speed = 0;
     } else {
-      speed = (distance - Constants.DRIVE_DEADBAND) / (1 - Constants.DRIVE_DEADBAND);
+      speed = (distance - Constants.DRIVE_DEADBAND) / (1.0 - Constants.DRIVE_DEADBAND);
     }
     // add gain and sensitivity
-    speed = Math.pow(speed, Constants.DRIVE_SPEED_SENSITIVTY) * Constants.DRIVE_SPEED_GAIN;
+    speed = Math.pow(speed, Constants.DRIVE_SPEED_SENSITIVITY) * Constants.DRIVE_SPEED_GAIN;
     // do deadband on rotation
     double rotation;
-    if (Math.abs(stickTwist) < Constants.DRIVE_DEADBAND) {
+    if (Math.abs(stickTwist) < Constants.TWIST_DEADBAND) {
       rotation = 0;
     } else if (stickTwist > 0) {
-      rotation = (stickTwist - Constants.DRIVE_DEADBAND) / (1 - Constants.DRIVE_DEADBAND);
+      rotation = (stickTwist - Constants.TWIST_DEADBAND) / (1.0 - Constants.TWIST_DEADBAND);
     } else {
-      rotation = (stickTwist + Constants.DRIVE_DEADBAND) / (1 - Constants.DRIVE_DEADBAND);
+      rotation = (stickTwist + Constants.TWIST_DEADBAND) / (1.0 - Constants.TWIST_DEADBAND);
     }
     // find direction, if the speed is 0 then it won't rotate
     double direction = Math.atan2(stickX, stickY);

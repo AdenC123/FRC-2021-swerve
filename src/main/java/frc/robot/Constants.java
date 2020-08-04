@@ -53,21 +53,22 @@ public final class Constants {
 
     // PID values
     public static double SPIN_kP = 0.25;
-    public static double SPIN_kI = 0;
+    public static double SPIN_kI = 0.0;
 
-    public static double DRIVE_kP = 0;
-    public static double DRIVE_kI = 0;
+    public static double DRIVE_kP = 0.0;
+    public static double DRIVE_kI = 0.0;
     public static double DRIVE_kFF = 0.000170;
-    public static double DRIVE_kMIN = -1;
-    public static double DRIVE_kMAX = 1;
+    public static double DRIVE_kMIN = -1.0;
+    public static double DRIVE_kMAX = 1.0;
 
     // used in DriveCommand
     public static double DRIVE_DEADBAND = 0.1;
-    public static double DRIVE_SPEED_SENSITIVTY = 2;
+    public static double DRIVE_SPEED_SENSITIVITY = 2.0;
     public static double DRIVE_SPEED_GAIN = 0.5;
 
-    public static double TWIST_SENSITIVITY = 2;
-    public static double TWIST_GAIN = 1;
+    public static double TWIST_DEADBAND = 0.1;
+    public static double TWIST_SENSITIVITY = 2.0;
+    public static double TWIST_GAIN = 1.0;
 
     // small number for zero check
     public static final double SMALL = 0.000001;
