@@ -65,7 +65,7 @@ public class DriveCommandXbox extends CommandBase {
     rotation = Math.pow(rotation, Constants.TWIST_SENSITIVITY) * Constants.TWIST_GAIN * rotMult;
     // find direction, if the speed is 0 then it won't rotate
     double direction = Math.atan2(stickX, stickY);
-    m_driveSubsystem.swerveDrive(direction, speed, rotation);
+    m_driveSubsystem.swerveDriveFieldRelative(direction, speed, rotation);
     
   }
 

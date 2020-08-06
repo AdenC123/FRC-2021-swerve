@@ -22,6 +22,8 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+
+  private NavX m_navx;
   
   // Telemetry variables
   private double m_lastAnalogEncoder = -1.0;
@@ -34,6 +36,7 @@ public class Robot extends TimedRobot {
   private double m_lastDrivekP = -1.0;
   private double m_lastDrivekI = -1.0;
   private double m_lastDrivekFF = -1.0;
+  private double m_lastHeading = 1000.0;
 
   /**
    * Update telemetry feedback for a real number value. If the value has not changed, no update is sent
@@ -105,6 +108,7 @@ public class Robot extends TimedRobot {
   }
 
   private void displayTelemetry() { 
+    m_lastHeading = dashboardTelemetry(0, "Heading", m_navx.getHeadingInfo().heading, m_lastHeading);
     m_lastDrivekP = dashboardTelemetry(5, "Drive kP", Constants.DRIVE_kP, m_lastDrivekP);
     m_lastDrivekI = dashboardTelemetry(6, "Drive kI", Constants.DRIVE_kI, m_lastDrivekI);
     m_lastDrivekFF = dashboardTelemetry(7, "Drive kFF", Constants.DRIVE_kFF, m_lastDrivekFF);
@@ -125,6 +129,9 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    m_navx = NavX.getInstance();
+    m_navx.initializeHeadingAndNav();
   }
 
   /**

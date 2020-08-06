@@ -10,7 +10,7 @@ public final class Utl {
     }
 
     public static double max(double ... values) {
-        double max = 0.0;
+        double max = Double.NEGATIVE_INFINITY;
         for (double v : values) {
             if (v > max) {
                 max = v;

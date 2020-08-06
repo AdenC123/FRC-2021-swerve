@@ -190,7 +190,7 @@ public class DriveModule {
 
         // Compute and set the speed value
         m_lastSpeed = speed * Constants.MAX_DRIVE_VELOCITY * m_speedMultiplier;
-        m_drivePID.setReference( m_lastSpeed, ControlType.kVelocity);
+        m_drivePID.setReference(m_lastSpeed, ControlType.kVelocity);
 
         // remember the last spin direction and speed this module was set to.
         m_lastSpeed = speed;

@@ -10,6 +10,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.DriveModule;
+import frc.robot.NavX;
 import frc.robot.Utl;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -31,6 +32,9 @@ public class DriveSubsystem extends SubsystemBase {
     private double m_lastRRAngle = 0.0;
     private double m_lastLFAngle = 0.0;
     private double m_lastLRAngle = 0.0;
+
+    // create NavX
+    private final NavX m_navx = NavX.getInstance();
 
     /**
      * Creates a new DriveSubsystem.
@@ -87,7 +91,7 @@ public class DriveSubsystem extends SubsystemBase {
         double lrSpeed = Utl.length(a, d);
         double rrSpeed = Utl.length(a, c);
 
-        // normalize speeds TODO: make this not look like shit
+        // normalize speeds
         double max = Utl.max(rfSpeed, lfSpeed, lrSpeed, rrSpeed);
         if (max > 1.0) {
             rfSpeed /= max;
@@ -119,7 +123,17 @@ public class DriveSubsystem extends SubsystemBase {
      * @param rotation  Clockwise rotation speed from -1.0 to 1.0.
      */
     public void swerveDrive(double direction, double speed, double rotation) {
-        swerveDriveComponents(Math.cos(direction) * speed, Math.sin(direction), rotation);
+        swerveDriveComponents(Math.cos(direction) * speed, Math.sin(direction) * speed, rotation);
+    }
+
+    public void swerveDriveFieldRelative(double direction, double speed, double rotation) {
+        double fwd = Math.cos(direction) * speed;
+        double str = Math.sin(direction) * speed;
+        double heading = Math.toRadians(m_navx.getHeadingInfo().heading);
+        double temp = (fwd * Math.cos(heading)) + (str * Math.sin(heading));
+        str = (-fwd * Math.sin(heading)) + (str * Math.cos(heading));
+        fwd = temp;
+        swerveDriveComponents(fwd, str, rotation);
     }
 
     /**
@@ -137,5 +151,7 @@ public class DriveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
+        // Update the NavX heading
+        m_navx.recomputeHeading(false);
     }
 }
