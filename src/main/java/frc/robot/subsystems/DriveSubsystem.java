@@ -158,14 +158,6 @@ public class DriveSubsystem extends SubsystemBase {
     public void swerveDriveFieldRelative(double fieldDirection, double speed, double rotation) {
         double chassisDirection = fieldDirection - m_navx.getHeading();
         swerveDrive(chassisDirection, speed, rotation);
-
-//        double fwd = Math.cos(fieldDirection) * speed;
-//        double str = Math.sin(fieldDirection) * speed;
-//        double heading = Math.toRadians(m_navx.getHeadingInfo().heading);
-//        double temp = (fwd * Math.cos(heading)) + (str * Math.sin(heading));
-//        str = (-fwd * Math.sin(heading)) + (str * Math.cos(heading));
-//        fwd = temp;
-//        swerveDriveComponents(fwd, str, rotation);
     }
 
     /**

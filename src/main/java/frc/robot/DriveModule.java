@@ -23,7 +23,7 @@ import static frc.robot.Utl.*;
  */
 public class DriveModule {
 
-    private static final double RADIANS_TO_TICS = TWO_PI / 18.0;
+    private static final double RADIANS_TO_TICS = 18.0 / TWO_PI;
 
     private final CANSparkMax m_driveMotor;
     private final CANSparkMax m_spinMotor;
@@ -71,20 +71,20 @@ public class DriveModule {
         // reset motor controllers to factory default
         m_driveMotor.restoreFactoryDefaults();
         m_spinMotor.restoreFactoryDefaults();
-//        m_spinMotor.setInverted(true);
+        m_spinMotor.setInverted(true);
 
         // Instantiate the motor encoders and analog encoders
         m_driveEncoder = m_driveMotor.getEncoder();
         m_spinEncoder = m_spinMotor.getEncoder();
-//        m_spinEncoder.setInverted(true);
+        // m_spinEncoder.setInverted(true);
         m_analogEncoder = new AnalogPotentiometer(analogPort);
 
 
         // Create and update PID controllers for spin and drive motors and initialize them
         m_spinPID = m_spinMotor.getPIDController();
-        initPID(m_spinPID, 0.0, Constants.SPIN_kP, Constants.DRIVE_kI);
+        initPID(m_spinPID, 0.0, Constants.SPIN_kP, Constants.SPIN_kI);
         m_drivePID = m_driveMotor.getPIDController();
-        initPID(m_drivePID, Constants.DRIVE_kFF, Constants.SPIN_kP, Constants.DRIVE_kI);
+        initPID(m_drivePID, Constants.DRIVE_kFF, Constants.DRIVE_kP, Constants.DRIVE_kI);
 
         // calibrate
         m_calibrationOffset = calibrationOffset;
@@ -166,8 +166,8 @@ public class DriveModule {
      */
     public void calibrate() {
         // (offset - actual) * 360 / 20
-        m_spinEncoder.setPosition((m_calibrationOffset - m_analogEncoder.get()) * 18.0);
-//        m_spinEncoder.setPosition((m_analogEncoder.get() - m_calibrationOffset) * 18.0);
+        //m_spinEncoder.setPosition((m_calibrationOffset - m_analogEncoder.get()) * 18.0);
+        m_spinEncoder.setPosition((m_analogEncoder.get() - m_calibrationOffset) * 18.0);
     }
 
     /**
@@ -221,8 +221,8 @@ public class DriveModule {
         }
 
         // Compute and set the spin value
-        m_lastEncoder -= (deltaRadians * RADIANS_TO_TICS);
-//        m_lastEncoder += (deltaRadians * RADIANS_TO_TICS);
+        // m_lastEncoder -= (deltaRadians * RADIANS_TO_TICS);
+        m_lastEncoder += (deltaRadians * RADIANS_TO_TICS);
         m_spinPID.setReference(m_lastEncoder, ControlType.kPosition);
 
         // Compute and set the speed value
