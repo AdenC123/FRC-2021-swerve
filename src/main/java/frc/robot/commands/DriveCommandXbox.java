@@ -50,6 +50,9 @@ public class DriveCommandXbox extends CommandBase {
     if (distance < Constants.DRIVE_DEADBAND) {
       speed = 0.0;
     } else {
+      if (distance > 1.0) {
+        distance = 1.0;
+      }
       speed = (distance - Constants.DRIVE_DEADBAND) / (1.0 - Constants.DRIVE_DEADBAND);
     }
     // add gain and sensitivity

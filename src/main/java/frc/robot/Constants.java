@@ -47,9 +47,16 @@ public final class Constants {
 
     public static double MAX_DRIVE_VELOCITY = 5500;
 
-    // length and width from center of the wheels, in cm (unit doesnt matter)
+    // length and width from center of the wheels, in cm (unit doesn't matter)
     public static double DRIVE_LENGTH = 57.4;
     public static double DRIVE_WIDTH = 57.7;
+
+    // maximum linear speed and rotational speed. What we are really interested in knowing is how the robot
+    // can travel or turn in one command cycle at full speed because for path following we need to know how
+    // big to make the increments along the path, and need a pretty good estimate of where the robot is for
+    // making course corrections.
+    public static double MAX_FEET_PER_SEC = 50.0;
+    public static double MAX_RADIANS_PER_SEC = 2.0;
 
     // PID values
     public static double SPIN_kP = 0.25;
@@ -58,8 +65,6 @@ public final class Constants {
     public static double DRIVE_kP = 0.0;
     public static double DRIVE_kI = 0.0;
     public static double DRIVE_kFF = 0.000170;
-    public static double DRIVE_kMIN = -1.0;
-    public static double DRIVE_kMAX = 1.0;
 
     // used in DriveCommand
     public static double DRIVE_DEADBAND = 0.1;

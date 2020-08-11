@@ -21,20 +21,31 @@ public class DriveSubsystem extends SubsystemBase {
     private final DriveModule m_lf;
     private final DriveModule m_lr;
 
+    // create NavX - the drive subsystem owns the NavX and is responsible for the heading update
+    // cycle.
+    private final NavX m_navx = NavX.getInstance();
+
     // the drive geometry
-    private final double lengthOverDiagonal =
+    private final double LENGTH_OVER_DIAGONAL =
             Constants.DRIVE_LENGTH / Utl.length(Constants.DRIVE_LENGTH, Constants.DRIVE_WIDTH);
-    private final double widthOverDiagonal =
+    private final double WIDTH_OVER_DIAGONAL =
             Constants.DRIVE_WIDTH / Utl.length(Constants.DRIVE_LENGTH, Constants.DRIVE_WIDTH);
 
     // keep track of last angles
-    private double m_lastRFAngle = 0.0;
-    private double m_lastRRAngle = 0.0;
-    private double m_lastLFAngle = 0.0;
-    private double m_lastLRAngle = 0.0;
+    private double m_RF_lastRadians = 0.0;
+    private double m_RR_lastRadians = 0.0;
+    private double m_LF_lastRadians = 0.0;
+    private double m_LR_lastRadians = 0.0;
 
-    // create NavX
-    private final NavX m_navx = NavX.getInstance();
+    // keep track of the last chassis speeds for odometry
+    private double m_lastChassisForward = 0.0;
+    private double m_lastChassisStrafe = 0.0;
+    private double m_lastChassisRotation = 0.0;
+
+    private double m_fieldX = 0.0;
+    private double m_fieldY = 0.0;
+    private double m_fieldHeading = 0.0;
+
 
     /**
      * Creates a new DriveSubsystem.
@@ -73,17 +84,17 @@ public class DriveSubsystem extends SubsystemBase {
     /**
      * Swerve drive with a forward, strafe and rotate.
      *
-     * @param fwd Drive forward. From -1 to 1.
-     * @param str Strafe right. From -1 to 1.
-     * @param rcw Clockwise rotation. From -1 to 1.
+     * @param forward  Drive forward. From -1 to 1.
+     * @param strafe   Strafe right. From -1 to 1.
+     * @param rotation Clockwise rotation. From -1 to 1.
      */
-    public void swerveDriveComponents(double fwd, double str, double rcw) {
+    private void swerveDriveComponents(double forward, double strafe, double rotation) {
 
         // calculate a, b, c and d variables
-        double a = str - (rcw * lengthOverDiagonal);
-        double b = str + (rcw * lengthOverDiagonal);
-        double c = fwd - (rcw * widthOverDiagonal);
-        double d = fwd + (rcw * widthOverDiagonal);
+        double a = strafe - (rotation * LENGTH_OVER_DIAGONAL);
+        double b = strafe + (rotation * LENGTH_OVER_DIAGONAL);
+        double c = forward - (rotation * WIDTH_OVER_DIAGONAL);
+        double d = forward + (rotation * WIDTH_OVER_DIAGONAL);
 
         // calculate wheel speeds
         double rfSpeed = Utl.length(b, c);
@@ -98,42 +109,63 @@ public class DriveSubsystem extends SubsystemBase {
             lfSpeed /= max;
             lrSpeed /= max;
             rrSpeed /= max;
+            forward /= max;
+            strafe /= max;
+            rotation /=max;
         }
 
-        // if speed is small or 0, don't change angle
-        m_lastRFAngle = (rfSpeed < Constants.SMALL) ? m_lastRFAngle : Math.toDegrees(Math.atan2(b, c));
-        m_lastLFAngle = (lfSpeed < Constants.SMALL) ? m_lastLFAngle : Math.toDegrees(Math.atan2(b, d));
-        m_lastLRAngle = (lrSpeed < Constants.SMALL) ? m_lastLRAngle : Math.toDegrees(Math.atan2(a, d));
-        m_lastRRAngle = (rrSpeed < Constants.SMALL) ? m_lastRRAngle : Math.toDegrees(Math.atan2(a, c));
-
+        // if speed is small or 0, (i.e. essentially stopped), use the last angle because its next motion
+        // will probably be very close to its current last motion - i.e. the next direction will probably
+        // be very close to the last direction.
+        m_RF_lastRadians = (rfSpeed < Constants.SMALL) ? m_RF_lastRadians : Math.atan2(b, c);
+        m_LF_lastRadians = (lfSpeed < Constants.SMALL) ? m_LF_lastRadians : Math.atan2(b, d);
+        m_LR_lastRadians = (lrSpeed < Constants.SMALL) ? m_LR_lastRadians : Math.atan2(a, d);
+        m_RR_lastRadians = (rrSpeed < Constants.SMALL) ? m_RR_lastRadians : Math.atan2(a, c);
 
         // run wheels at speeds and angles
-        m_rf.setDegreesAndSpeed(m_lastRFAngle, rfSpeed);
-        m_lf.setDegreesAndSpeed(m_lastLFAngle, lfSpeed);
-        m_lr.setDegreesAndSpeed(m_lastLRAngle, lrSpeed);
-        m_rr.setDegreesAndSpeed(m_lastRRAngle, rrSpeed);
+        m_rf.setRadiansAndSpeed(m_RF_lastRadians, rfSpeed);
+        m_lf.setRadiansAndSpeed(m_LF_lastRadians, lfSpeed);
+        m_lr.setRadiansAndSpeed(m_LR_lastRadians, lrSpeed);
+        m_rr.setRadiansAndSpeed(m_RR_lastRadians, rrSpeed);
+
+        // save the values we set for use in odometry calculations
+        m_lastChassisForward = forward;
+        m_lastChassisStrafe = strafe;
+        m_lastChassisRotation = rotation;
     }
 
     /**
      * Swerve drive with a robot-relative direction (angle in radians), a speed and a rotation.
      *
-     * @param direction (double) The direction from -Math.PI to Math.PI radians where 0.0 is towards the
-     *                  front of the robot, and positive is clockwise.
-     * @param speed     Speed from 0.0 to 1.0.
-     * @param rotation  Clockwise rotation speed from -1.0 to 1.0.
+     * @param chassisDirection (double) The robot chassis relative direction in radians from -Math.PI to
+     *                         Math.PI where 0.0 is towards the front of the robot, and positive is clockwise.
+     * @param speed            (double) Speed from 0.0 to 1.0.
+     * @param rotation         (double) Clockwise rotation speed from -1.0 to 1.0.
      */
-    public void swerveDrive(double direction, double speed, double rotation) {
-        swerveDriveComponents(Math.cos(direction) * speed, Math.sin(direction) * speed, rotation);
+    public void swerveDrive(double chassisDirection, double speed, double rotation) {
+        swerveDriveComponents(Math.cos(chassisDirection) * speed,
+                Math.sin(chassisDirection) * speed, rotation);
     }
 
-    public void swerveDriveFieldRelative(double direction, double speed, double rotation) {
-        double fwd = Math.cos(direction) * speed;
-        double str = Math.sin(direction) * speed;
-        double heading = Math.toRadians(m_navx.getHeadingInfo().heading);
-        double temp = (fwd * Math.cos(heading)) + (str * Math.sin(heading));
-        str = (-fwd * Math.sin(heading)) + (str * Math.cos(heading));
-        fwd = temp;
-        swerveDriveComponents(fwd, str, rotation);
+    /**
+     * Swerve drive with a field-relative direction (angle in radians), a speed and a rotation.
+     *
+     * @param fieldDirection (double) The direction in radians from -Math.PI to Math.PI where 0.0 is away from the
+     *                  driver, and positive is clockwise.
+     * @param speed     (double) Speed from 0.0 to 1.0.
+     * @param rotation  (double) Clockwise rotation speed from -1.0 to 1.0.
+     */
+    public void swerveDriveFieldRelative(double fieldDirection, double speed, double rotation) {
+        double chassisDirection = fieldDirection - m_navx.getHeading();
+        swerveDrive(chassisDirection, speed, rotation);
+
+//        double fwd = Math.cos(fieldDirection) * speed;
+//        double str = Math.sin(fieldDirection) * speed;
+//        double heading = Math.toRadians(m_navx.getHeadingInfo().heading);
+//        double temp = (fwd * Math.cos(heading)) + (str * Math.sin(heading));
+//        str = (-fwd * Math.sin(heading)) + (str * Math.cos(heading));
+//        fwd = temp;
+//        swerveDriveComponents(fwd, str, rotation);
     }
 
     /**
@@ -153,5 +185,7 @@ public class DriveSubsystem extends SubsystemBase {
         // This method will be called once per scheduler run
         // Update the NavX heading
         m_navx.recomputeHeading(false);
+        // Update the odometry for the drive
+
     }
 }
