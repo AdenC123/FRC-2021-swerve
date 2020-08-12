@@ -44,7 +44,7 @@ public class SpinTest extends CommandBase {
       // calculate stick angle
       double stickAngle = Math.atan2(stickX, stickY);
       stickAngle = Math.toDegrees(stickAngle);
-      RobotContainer.m_activeModule.setAngleAndSpeed(stickAngle, 0);
+      RobotContainer.m_activeModule.setDegreesAndSpeed(stickAngle, 0);
     }
   }
 

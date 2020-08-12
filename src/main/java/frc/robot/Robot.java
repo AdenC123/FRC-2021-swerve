@@ -24,16 +24,16 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
   
   // Telemetry variables
-  private double m_lastAnalogEncoder = -1.0;
-  private double m_lastSpinEncoder = -1.0;
-  private double m_lastDriveEncoder = -1.0;
-  private double m_lastSpinVelocity = -1.0;
-  private double m_lastDriveVelocity = -1.0;
-  private double m_lastSpinkP = -1.0;
-  private double m_lastSpinkI = -1.0;
-  private double m_lastDrivekP = -1.0;
-  private double m_lastDrivekI = -1.0;
-  private double m_lastDrivekFF = -1.0;
+  private double m_lastPort0 = -1.0;
+  private double m_lastPort1 = -1.0;
+  private double m_lastPort2 = -1.0;
+  private double m_lastPort3 = -1.0;
+  private double m_lastPort4 = -1.0;
+  private double m_lastPort5 = -1.0;
+  private double m_lastPort6 = -1.0;
+  private double m_lastPort7 = -1.0;
+  private double m_lastPort8 = -1.0;
+  private double m_lastPort9 = -1.0;
 
   /**
    * Update telemetry feedback for a real number value. If the value has not changed, no update is sent
@@ -105,20 +105,16 @@ public class Robot extends TimedRobot {
   }
 
   private void displayTelemetry() {
-    m_lastAnalogEncoder = dashboardTelemetry(0, "Analog Enc",
-      RobotContainer.m_activeModule.getAnalogEncoder(), m_lastAnalogEncoder);
-    m_lastSpinEncoder = dashboardTelemetry(1, "Spin Enc",
-      RobotContainer.m_activeModule.getSpinEncoder().getPosition(), m_lastSpinEncoder);
-    m_lastDriveEncoder = dashboardTelemetry(2, "Drive Enc",
-      RobotContainer.m_activeModule.getDriveEncoder().getPosition(), m_lastDriveEncoder);
-    m_lastSpinVelocity = dashboardTelemetry(3, "Spin Vel",
-      RobotContainer.m_activeModule.getSpinEncoder().getVelocity(), m_lastSpinVelocity);
-    m_lastDriveVelocity = dashboardTelemetry(4, "Drive Vel",
-      RobotContainer.m_activeModule.getDriveEncoder().getVelocity(), m_lastDriveVelocity);
-    
-    m_lastDrivekP = dashboardTelemetry(5, "Drive kP", Constants.DRIVE_kP, m_lastDrivekP);
-    m_lastDrivekI = dashboardTelemetry(6, "Drive kI", Constants.DRIVE_kI, m_lastDrivekI);
-    m_lastDrivekFF = dashboardTelemetry(7, "Drive kFF", Constants.DRIVE_kFF, m_lastDrivekFF);
+    m_lastPort0 = dashboardTelemetry(0, "Set",
+      Constants.MAX_DRIVE_VELOCITY * RobotContainer.m_speed, m_lastPort0);
+    m_lastPort1 = dashboardTelemetry(1, "Actual",
+      RobotContainer.m_activeModule.getDriveEncoder().getVelocity(), m_lastPort1);
+    m_lastPort2 = dashboardTelemetry(2, "Percent",
+      RobotContainer.m_speed, m_lastPort2);
+
+    m_lastPort5 = dashboardTelemetry(5, "Drive kP", Constants.DRIVE_kP, m_lastPort5);
+    m_lastPort6 = dashboardTelemetry(6, "Drive kI", Constants.DRIVE_kI, m_lastPort6);
+    m_lastPort7 = dashboardTelemetry(7, "Drive kFF", Constants.DRIVE_kFF, m_lastPort7);
   }
 
   /**

@@ -7,24 +7,20 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class DriveTest extends CommandBase {
+public class SetSpeed extends CommandBase {
 
-  private final Joystick m_stick;
-  private final DriveSubsystem m_driveSubsystem;
+  private DriveSubsystem m_driveSubsystem;
 
   /**
-   * Sets the speed of the active module using setAngleAndSpeed.
-   * Sets speed to the Y of the joystick.
+   * Creates a new SetSpeed.
    */
-  public DriveTest(Joystick stick, DriveSubsystem driveSubsystem) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    m_stick = stick;
+  public SetSpeed(DriveSubsystem driveSubsystem) {
     m_driveSubsystem = driveSubsystem;
+    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_driveSubsystem);
   }
 
@@ -36,15 +32,7 @@ public class DriveTest extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double stickY = -m_stick.getY();
-    double stickX = m_stick.getX();
-    if (m_stick.getRawButton(1)) {
-      RobotContainer.m_activeModule.setDegreesAndSpeed(0, 0.5);
-    } else if (stickY * stickY + stickX * stickX > 0.1) {
-      RobotContainer.m_activeModule.setDegreesAndSpeed(0, stickY);
-    } else {
-      RobotContainer.m_activeModule.setDegreesAndSpeed(0, 0);
-    }
+    RobotContainer.m_activeModule.setDegreesAndSpeed(0, RobotContainer.m_speed);
   }
 
   // Called once the command ends or is interrupted.

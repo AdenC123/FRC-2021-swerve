@@ -55,9 +55,10 @@ public final class Constants {
     public static double SPIN_kP = 0.25;
     public static double SPIN_kI = 0;
 
-    public static double DRIVE_kP = 0;
-    public static double DRIVE_kI = 0;
-    public static double DRIVE_kFF = 0.000170;
+    public static double DRIVE_kP = 0.00003;
+    public static double DRIVE_kI = 0.000002;
+    public static double DRIVE_kFF = 0.000174;
     public static double DRIVE_kMIN = -1;
     public static double DRIVE_kMAX = 1;
+    public static double DRIVE_IZONE = 200;
 }

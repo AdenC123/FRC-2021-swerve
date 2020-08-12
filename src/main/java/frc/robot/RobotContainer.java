@@ -18,10 +18,12 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.commands.BumpDrivekFF;
 import frc.robot.commands.BumpDrivekI;
 import frc.robot.commands.BumpDrivekP;
+import frc.robot.commands.BumpSpeed;
 import frc.robot.commands.BumpSpinkI;
 import frc.robot.commands.BumpSpinkP;
 import frc.robot.commands.DriveTest;
 import frc.robot.commands.SetActiveModule;
+import frc.robot.commands.SetSpeed;
 import frc.robot.commands.SpinTest;
 import frc.robot.commands.SpinToDegrees;
 
@@ -36,9 +38,11 @@ public class RobotContainer {
   private final DriveSubsystem m_driveSubsystem;
   //private final SwerveTest m_swerveTest;
   //private final SpinTest m_spinTest;
-  private final DriveTest m_driveTest;
+  //private final DriveTest m_driveTest;
+  private final SetSpeed m_setSpeed;
 
-  public static DriveModule m_activeModule; // this probably shouldn't be static but its a test program so whatever
+  public static DriveModule m_activeModule;
+  public static double m_speed = 0.0;
 
   // controllers
   private final XboxController m_xbox = new XboxController(0);
@@ -77,10 +81,11 @@ public class RobotContainer {
     // commands
     //m_swerveTest = new SwerveTest(m_xbox, m_driveSubsystem);
     //m_spinTest = new SpinTest(m_stick, m_driveSubsystem);
-    m_driveTest = new DriveTest(m_stick, m_driveSubsystem);
+    //m_driveTest = new DriveTest(m_stick, m_driveSubsystem);
+    m_setSpeed = new SetSpeed(m_driveSubsystem);
 
     // set default commands
-    // m_driveSubsystem.setDefaultCommand(m_driveTest);
+    m_driveSubsystem.setDefaultCommand(m_setSpeed);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -114,12 +119,17 @@ public class RobotContainer {
     m_button11.whenPressed(new BumpDrivekFF(-0.000001));
     m_button12.whenPressed(new BumpDrivekFF(0.000001));
     
+    // change speed with top buttons
+    m_button3.whenPressed(new BumpSpeed(-0.1));
+    m_button5.whenPressed(new BumpSpeed(0.1));
 
     // set degrees with xbox buttons
+    /*
     m_xboxY.whenPressed(new SpinToDegrees(0, m_driveSubsystem));
     m_xboxB.whenPressed(new SpinToDegrees(90, m_driveSubsystem));
     m_xboxX.whenPressed(new SpinToDegrees(-90, m_driveSubsystem));
     m_xboxA.whenPressed(new SpinToDegrees(-180, m_driveSubsystem));
+    */
   }
 
 
