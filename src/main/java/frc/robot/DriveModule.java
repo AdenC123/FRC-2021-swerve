@@ -19,7 +19,7 @@ import static frc.robot.Utl.*;
 
 
 /**
- * Class that contains the motors and encoders for a single swerve drive module.
+ * Class that contains and controls the motors and encoders for a single swerve drive module.
  */
 public class DriveModule {
 
