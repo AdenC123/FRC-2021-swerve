@@ -45,6 +45,9 @@ public final class Constants {
             LF = 0.853;
     }
 
+    // This is the maximum velocity read by the encoders being used to control the drive speed. The actual
+    // maximum is closer to 5700, but we have scaled that down a bit to account for friction, drag, lower
+    // battery voltage, etc.
     public static double MAX_DRIVE_VELOCITY = 5500;
 
     // length and width from center of the wheels, in cm (unit doesn't matter)
@@ -55,16 +58,17 @@ public final class Constants {
     // can travel or turn in one command cycle at full speed because for path following we need to know how
     // big to make the increments along the path, and need a pretty good estimate of where the robot is for
     // making course corrections.
-    public static double MAX_FEET_PER_SEC = 50.0;
+    public static double MAX_METERS_PER_SEC = 10.0;
     public static double MAX_RADIANS_PER_SEC = 2.0;
 
     // PID values
     public static double SPIN_kP = 0.25;
     public static double SPIN_kI = 0.0;
 
-    public static double DRIVE_kP = 0.0;
-    public static double DRIVE_kI = 0.0;
-    public static double DRIVE_kFF = 0.000170;
+    public static double DRIVE_kP = 0.00003;
+    public static double DRIVE_kI = 0.000002;
+    public static double DRIVE_kFF = 0.000174;
+    public static double DRIVE_IZONE = 200.0;
 
     // used in DriveCommand
     public static double DRIVE_DEADBAND = 0.1;
