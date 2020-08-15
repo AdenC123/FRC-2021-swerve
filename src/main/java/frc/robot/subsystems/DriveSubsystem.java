@@ -38,6 +38,8 @@ public class DriveSubsystem extends SubsystemBase {
     private double m_LR_lastRadians = 0.0;
 
     // keep track of the last chassis speeds for odometry
+    private long m_lastTime = System.currentTimeMillis();
+    private double m_lastHeading = 0.0;
     private double m_lastChassisForward = 0.0;
     private double m_lastChassisStrafe = 0.0;
     private double m_lastChassisRotation = 0.0;
@@ -52,16 +54,16 @@ public class DriveSubsystem extends SubsystemBase {
      */
     public DriveSubsystem() {
         // Initialization Here
-        m_rf = new DriveModule(Constants.MotorControllers.RF_DRIVE, Constants.MotorControllers.RF_SPIN,
+        m_rf = DriveModule.factory(Constants.MotorControllers.RF_DRIVE, Constants.MotorControllers.RF_SPIN,
                 Constants.AnalogPorts.RF, Constants.CalibrationOffset.RF);
 
-        m_rr = new DriveModule(Constants.MotorControllers.RR_DRIVE, Constants.MotorControllers.RR_SPIN,
+        m_rr = DriveModule.factory(Constants.MotorControllers.RR_DRIVE, Constants.MotorControllers.RR_SPIN,
                 Constants.AnalogPorts.RR, Constants.CalibrationOffset.RR);
 
-        m_lf = new DriveModule(Constants.MotorControllers.LF_DRIVE, Constants.MotorControllers.LF_SPIN,
+        m_lf = DriveModule.factory(Constants.MotorControllers.LF_DRIVE, Constants.MotorControllers.LF_SPIN,
                 Constants.AnalogPorts.LF, Constants.CalibrationOffset.LF);
 
-        m_lr = new DriveModule(Constants.MotorControllers.LR_DRIVE, Constants.MotorControllers.LR_SPIN,
+        m_lr = DriveModule.factory(Constants.MotorControllers.LR_DRIVE, Constants.MotorControllers.LR_SPIN,
                 Constants.AnalogPorts.LR, Constants.CalibrationOffset.LR);
     }
 
@@ -172,12 +174,44 @@ public class DriveSubsystem extends SubsystemBase {
         swerveDrive(Math.toRadians(direction), speed, rotation);
     }
 
+    /**
+     * Set the field position of the robot. This is typically called at the beginning of the autonomous
+     * command as the command that is run should know where the robot has been placed on the field. It
+     * could also be called during play if machine vision, sensors, or some other method is available
+     * o locate the robot on the field.
+     *
+     * @param fieldX (double) The X location of the robot on the field.
+     * @param fieldY (double) The Y location of the robot on the field.
+     * @param heading (double) The heading of the robot on the field.
+     */
+    public void setFieldPosition(double fieldX, double fieldY, double heading) {
+        m_fieldX = fieldX;
+        m_fieldY = fieldY;
+        m_fieldHeading = heading;
+        m_navx.initializeHeadingAndNav(heading);
+        m_lastTime = System.currentTimeMillis();
+    }
+
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
         // Update the NavX heading
         m_navx.recomputeHeading(false);
-        // Update the odometry for the drive
+        // Update the odometry for the drive. OK, the scam here is that there was a previous heading set
+        // in the last command cycle when we were setting the new direction/speed/rotation for the
+        // chassis, and the heading we are at now. For odometry, assume the average of the last heading and current
+        // heading approximates the path of the robot and that the last speed set happened pretty
+        // instantaneously. In that case, we can make a pretty good guess how the robot moved on the field.
+        double currentHeading = m_navx.getHeading();
+        double aveHeading = (m_lastHeading + currentHeading) * 0.5;
+        long now = System.currentTimeMillis();
+        double sinHeading = Math.sin(aveHeading);
+        double cosHeading = Math.cos(aveHeading);
+        double maxDistanceInInterval = Constants.MAX_METERS_PER_SEC * (double)(now - m_lastTime) / 1000.0;
+        m_fieldX += ((m_lastChassisForward * sinHeading) + (m_lastChassisStrafe * cosHeading)) * maxDistanceInInterval;
+        m_fieldY += ((m_lastChassisForward * cosHeading) - (m_lastChassisStrafe * sinHeading)) * maxDistanceInInterval;
+        m_lastHeading = currentHeading;
+        m_lastTime = now;
 
     }
 }

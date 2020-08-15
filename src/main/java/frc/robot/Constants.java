@@ -58,8 +58,8 @@ public final class Constants {
     // can travel or turn in one command cycle at full speed because for path following we need to know how
     // big to make the increments along the path, and need a pretty good estimate of where the robot is for
     // making course corrections.
-    public static double MAX_METERS_PER_SEC = 10.0;
-    public static double MAX_RADIANS_PER_SEC = 2.0;
+    public static double MAX_METERS_PER_SEC = 3.5147;
+    public static double MAX_RADIANS_PER_SEC = 8.637;
 
     // PID values
     public static double SPIN_kP = 0.25;

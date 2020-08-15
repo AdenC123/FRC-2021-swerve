@@ -23,16 +23,22 @@ import static frc.robot.Utl.*;
  */
 public class DriveModule {
 
+    // Define this as a constant (only do the math once)
     private static final double RADIANS_TO_TICS = 18.0 / TWO_PI;
 
+    // This is the physical hardware wired to the roborio
     private final CANSparkMax m_driveMotor;
     private final CANSparkMax m_spinMotor;
-    private final CANEncoder m_driveEncoder;
-    private final CANEncoder m_spinEncoder;
     private final AnalogPotentiometer m_analogEncoder;
-    private final double m_calibrationOffset;
-    private final CANPIDController m_spinPID;
+
+    // The are components of the physical hardware
+    private final CANEncoder m_driveEncoder;
     private final CANPIDController m_drivePID;
+    private final CANEncoder m_spinEncoder;
+    private final CANPIDController m_spinPID;
+
+    // This is the initial 0.0 degree position calibration
+    private final double m_calibrationOffset;
     /**
      * A multiplier for the speed that is either 1.0 (forward) or -1.0 (backwards) because the shortest
      * spin to the desired direction may be the backwards direction of the wheel, which requires the speed
@@ -56,6 +62,31 @@ public class DriveModule {
     private double m_lastSpeed = 0.0;
 
     /**
+     * * The factory that creates the DriveModule given the
+     *
+     * @param driveCAN          CAN address for the motor that drives the wheel forward.
+     * @param spinCAN           CAN address for the motor that spins the wheel around.
+     * @param analogPort        Roborio analog port for the analog potentiometer, from 0 to 3. The analog
+     *                          potentiometer tracks the absolute spin motor.
+     * @param calibrationOffset The value of the analog potentiometer that will point the module forward.
+     * @return
+     */
+    public static DriveModule factory(int driveCAN, int spinCAN, int analogPort, double calibrationOffset) {
+        // basic code representations for physical hardware
+        CANSparkMax driveMotor = new CANSparkMax(driveCAN, MotorType.kBrushless);
+        CANSparkMax spinMotor = new CANSparkMax(spinCAN, MotorType.kBrushless);
+        AnalogPotentiometer analogEncoder = new AnalogPotentiometer(analogPort);
+        // derived representations of components embedded in the physical hardware
+        CANEncoder driveEncoder = driveMotor.getEncoder();
+        CANPIDController drivePID = driveMotor.getPIDController();
+        CANEncoder spinEncoder = spinMotor.getEncoder();
+        CANPIDController spinPID = spinMotor.getPIDController();
+        return new DriveModule(driveMotor, driveEncoder, drivePID,
+                spinMotor, spinEncoder, spinPID,
+                analogEncoder, calibrationOffset);
+    }
+
+    /**
      * Creates a new DriveModule. Ports should be for the same wheel.
      *
      * @param drivePort         Port for the motor that drives the wheel forward.
@@ -64,26 +95,40 @@ public class DriveModule {
      *                          tracks the spin motor.
      * @param calibrationOffset The value of the analog potentiometer that will point the module forward.
      */
-    public DriveModule(int drivePort, int spinPort, int analogPort, double calibrationOffset) {
-        m_driveMotor = new CANSparkMax(drivePort, MotorType.kBrushless);
-        m_spinMotor = new CANSparkMax(spinPort, MotorType.kBrushless);
+    /**
+     * Instantiate a DriveModule. All of instanced robot hardware control classes are passed in so this
+     * module can be tested using the JUnit test framework.
+     * @param driveMotor
+     * @param driveEncoder
+     * @param drivePID
+     * @param spinMotor
+     * @param spinEncoder
+     * @param spinPID
+     * @param analogEncoder
+     * @param calibrationOffset The value of the analog potentiometer that will point the module forward.
+     */
+    public DriveModule(CANSparkMax driveMotor, CANEncoder driveEncoder, CANPIDController drivePID,
+                       CANSparkMax spinMotor, CANEncoder spinEncoder, CANPIDController spinPID,
+                       AnalogPotentiometer analogEncoder, double calibrationOffset) {
+
+        m_driveMotor = driveMotor;
+        m_driveEncoder = driveEncoder;
+        m_drivePID = drivePID;
+        m_spinMotor = spinMotor;
+        m_spinEncoder = spinEncoder;
+        m_spinPID = spinPID;
+        m_analogEncoder = analogEncoder;
 
         // reset motor controllers to factory default
         m_driveMotor.restoreFactoryDefaults();
         m_spinMotor.restoreFactoryDefaults();
+
+        // invert the spin so positive is a clockwise spin
         m_spinMotor.setInverted(true);
 
-        // Instantiate the motor encoders and analog encoders
-        m_driveEncoder = m_driveMotor.getEncoder();
-        m_spinEncoder = m_spinMotor.getEncoder();
-        m_analogEncoder = new AnalogPotentiometer(analogPort);
-
-
-        // Create and update PID controllers for spin and drive motors and initialize them
-        m_spinPID = m_spinMotor.getPIDController();
-        initPID(m_spinPID, 0.0, Constants.SPIN_kP, Constants.SPIN_kI, 0.0);
-        m_drivePID = m_driveMotor.getPIDController();
+        // update PID controllers for spin and drive motors and initialize them
         initPID(m_drivePID, Constants.DRIVE_kFF, Constants.DRIVE_kP, Constants.DRIVE_kI, Constants.DRIVE_IZONE);
+        initPID(m_spinPID, 0.0, Constants.SPIN_kP, Constants.SPIN_kI, 0.0);
 
         // calibrate
         m_calibrationOffset = calibrationOffset;
@@ -122,6 +167,7 @@ public class DriveModule {
         pid.setOutputRange(-1.0, 1.0);
         pid.setD(0.0);
     }
+
     /**
      * Returns the CANEncoder object for the drive motor.
      */
@@ -178,7 +224,7 @@ public class DriveModule {
      *                      forward velocity.
      */
     public void setDegreesAndSpeed(double targetDegrees, double speed) {
-        setRadiansAndSpeed(Math.toRadians(targetDegrees),  speed);
+        setRadiansAndSpeed(Math.toRadians(targetDegrees), speed);
     }
 
     /**

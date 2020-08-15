@@ -19,15 +19,29 @@ public class NavX {
     // NOTE: the NavX software expresses all the navigation angles in degrees, so we maintain angles internal
     // to this class in degrees. And do the conversions to radians when this class is queried for values.
     private AHRS m_ahrs;
+    /** The heading we are trying to track with the robot (in degrees)
+     */
     private double m_expectedHeading = 0.0;
     private double m_updateCt = -1;
+
+    /** The raw heading, not corrected for the spins, read directly from the NavX, in the range
+     * -180 to +180. Used for determining whether the boundary between -180 and 180 has been crossed.
+     */
     private double m_headingRawLast = 0.0;
+
+    /** The number of complete revolutions the robot has made.
+     */
+    private int m_headingRevs = 0;
+
+    /** The actual heading of the robot from -infinity to infinity, so the spins are included in this
+     *  heading (in degrees)
+     */
     private double m_heading = 0.0;
     private boolean m_setExpectedToCurrent = false;
-    private int m_headingRevs = 0;
     private double m_refPitch = 0.0;
     private double m_refYaw = 0.0;
     private double m_refRoll = 0.0;
+    private double  m_refHeading = 0.0;
 
     private NavX() {
         // So, if there is no navx, there is no error - it just keeps trying to connect forever, so this
@@ -51,11 +65,24 @@ public class NavX {
      * be called immediately at the start of autonomous.
      */
     public void initializeHeadingAndNav() {
+        initializeHeadingAndNav(0.0);
+    }
+
+    /**
+     * Sets the reference start heading and navigation reference positions to the current values. This should
+     * be called immediately at the start of autonomous.
+     *
+     * @param heading (double) The current field heading of the robot in radians.
+     */
+    public void initializeHeadingAndNav(double heading) {
+        // In the past we have always initialized with the front of the robot facing down field, so the
+        // heading was 0.0 at initialization. In this case we are
         m_refPitch = m_ahrs.getPitch();
         m_refYaw = m_ahrs.getYaw();
         m_refRoll = m_ahrs.getRoll();
+        m_refHeading = Math.toDegrees(heading);
         m_headingRawLast = 0.0;
-        m_expectedHeading = 0.0;
+        m_expectedHeading = m_refHeading;
         m_headingRevs = 0;
     }
 
@@ -71,11 +98,9 @@ public class NavX {
 
     /**
      * Set the expected heading to the current heading.
-     *
-     * @param degrees
      */
-    public void setExpectedHToCurrent(double degrees) {
-        m_expectedHeading += degrees;
+    public void setExpectedHeadingToCurrent() {
+        m_expectedHeading = m_heading;
 
     }
 
@@ -114,10 +139,21 @@ public class NavX {
         }
         m_headingRawLast = heading_raw;
 
-        m_heading = (m_headingRevs * 360.0) + heading_raw - m_refYaw;
+        m_heading = (m_headingRevs * 360.0) + heading_raw - m_refYaw + m_refHeading;
         if (setExpectedToCurrent) {
             m_expectedHeading = m_heading;
         }
+    }
+
+    /**
+     *
+     * @param heading (double) The current field heading of the robot in radians.
+     */
+    public void setHeading(double heading) {
+        // In the past we have always initialized with the front of the robot facing down field, so the
+        // heading was 0.0 at initialization. In this case we are
+        //
+
     }
 
     /**
@@ -138,7 +174,8 @@ public class NavX {
         }
         double updateCt = m_ahrs.getUpdateCount();
         if (updateCt <= m_updateCt) {
-            // there is a problem communication with the NavX - the results we would get from NavX queries are unreliable.
+            // there is a problem communication with the NavX - the results we would get from NavX queries
+            // are unreliable.
             return null;
         }
         return new HeadingInfo(Math.toRadians(m_heading), Math.toRadians(m_expectedHeading), m_setExpectedToCurrent);
