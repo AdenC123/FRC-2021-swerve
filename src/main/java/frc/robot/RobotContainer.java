@@ -13,8 +13,13 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.robot.commands.BumpDriveSpeed;
+import frc.robot.commands.BumpDrivekFF;
+import frc.robot.commands.BumpDrivekI;
+import frc.robot.commands.BumpDrivekP;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.DriveCommandXbox;
+import frc.robot.commands.DriveDistance;
 import frc.robot.subsystems.DriveSubsystem;
 
 /**
@@ -42,6 +47,8 @@ public class RobotContainer {
   private final JoystickButton m_xboxB = new JoystickButton(m_xbox, 2);
   private final JoystickButton m_xboxX = new JoystickButton(m_xbox, 3);
   private final JoystickButton m_xboxY = new JoystickButton(m_xbox, 4);
+  private final JoystickButton m_xboxLeftBumper = new JoystickButton(m_xbox, 5);
+  private final JoystickButton m_xboxRightBumper = new JoystickButton(m_xbox, 6);
 
   private final JoystickButton m_button3 = new JoystickButton(m_stick, 3);
   private final JoystickButton m_button4 = new JoystickButton(m_stick, 4);
@@ -81,6 +88,19 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    m_xboxA.whenPressed(new DriveDistance(3, Utl.PI, m_driveSubsystem));
+    m_xboxB.whenPressed(new DriveDistance(3, Utl.PI_OVER_2, m_driveSubsystem));
+    m_xboxX.whenPressed(new DriveDistance(3, Utl.NEG_PI_OVER_2, m_driveSubsystem));
+    m_xboxY.whenPressed(new DriveDistance(3, 0, m_driveSubsystem));
+    m_xboxDpadUp.whenPressed(new BumpDriveSpeed(0.1));
+    m_xboxDpadDown.whenPressed(new BumpDriveSpeed(-0.1));
+   
+    m_button7.whenPressed(new BumpDrivekI(-0.000001, m_driveSubsystem));
+    m_button8.whenPressed(new BumpDrivekI(0.000001, m_driveSubsystem));
+    m_button9.whenPressed(new BumpDrivekP(-0.00001, m_driveSubsystem));
+    m_button10.whenPressed(new BumpDrivekP(0.00001, m_driveSubsystem));
+    m_button11.whenPressed(new BumpDrivekFF(-0.000001, m_driveSubsystem));
+    m_button12.whenPressed(new BumpDrivekFF(0.000001, m_driveSubsystem));
   }
 
 
@@ -100,5 +120,9 @@ public class RobotContainer {
 
   public Joystick getStick() {
     return m_stick;
+  }
+
+  public DriveSubsystem getDriveSubsystem() {
+    return m_driveSubsystem;
   }
 }

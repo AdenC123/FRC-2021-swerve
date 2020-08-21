@@ -83,6 +83,13 @@ public class DriveSubsystem extends SubsystemBase {
         return m_lr;
     }
 
+    public void resetDrivePID() {
+        m_rf.setDrivePID();
+        m_rr.setDrivePID();
+        m_lf.setDrivePID();
+        m_lr.setDrivePID();
+    }
+
     /**
      * Swerve drive with a forward, strafe and rotate.
      *
@@ -192,6 +199,10 @@ public class DriveSubsystem extends SubsystemBase {
         m_lastTime = System.currentTimeMillis();
     }
 
+    public double getFieldX() {return m_fieldX;}
+    public double getFieldY() {return m_fieldY;}
+    public double getFieldHeading() {return m_fieldHeading;}
+
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
@@ -210,7 +221,7 @@ public class DriveSubsystem extends SubsystemBase {
         double maxDistanceInInterval = Constants.MAX_METERS_PER_SEC * (double)(now - m_lastTime) / 1000.0;
         m_fieldX += ((m_lastChassisForward * sinHeading) + (m_lastChassisStrafe * cosHeading)) * maxDistanceInInterval;
         m_fieldY += ((m_lastChassisForward * cosHeading) - (m_lastChassisStrafe * sinHeading)) * maxDistanceInInterval;
-        m_lastHeading = currentHeading;
+        m_lastHeading = m_fieldHeading = currentHeading;
         m_lastTime = now;
 
     }

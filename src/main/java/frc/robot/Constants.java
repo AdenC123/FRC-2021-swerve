@@ -81,4 +81,7 @@ public final class Constants {
 
     // small number for zero check
     public static final double SMALL = 0.000001;
+
+    // temp variable used in DriveDistance
+    public static double DRIVE_SPEED = 0.0;
 }
