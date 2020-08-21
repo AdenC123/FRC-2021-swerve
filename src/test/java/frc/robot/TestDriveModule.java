@@ -36,5 +36,8 @@ public class TestDriveModule {
         DriveModule driveModule = new DriveModule(driveMotor, driveEncoder, drivePID,
                 spinMotor, spinEncoder, spinPID,
                 analogEncoder, 0.125);
+        // OK, this is the example in the technical documentation, which should have
+        // set the spin encoder position to 4.5
+        verify(spinEncoder, times(1)).setPosition(4.5);
     }
 }

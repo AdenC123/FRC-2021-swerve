@@ -69,7 +69,7 @@ public class DriveModule {
      * @param analogPort        Roborio analog port for the analog potentiometer, from 0 to 3. The analog
      *                          potentiometer tracks the absolute spin motor.
      * @param calibrationOffset The value of the analog potentiometer that will point the module forward.
-     * @return
+     * @return (not null) Returns the initialized drive module.
      */
     public static DriveModule factory(int driveCAN, int spinCAN, int analogPort, double calibrationOffset) {
         // basic code representations for physical hardware
