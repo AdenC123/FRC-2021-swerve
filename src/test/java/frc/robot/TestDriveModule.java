@@ -67,7 +67,7 @@ public class TestDriveModule {
     void test_set_10_1() {
         InitializedDriveModule dm = new InitializedDriveModule();
         dm.driveModule.setRadiansAndSpeed(Math.toRadians(10.0),1.0);
-        verify(dm.spinPID, times(2)).setReference(0.5, ControlType.kPosition);
+        verify(dm.spinPID, times(1)).setReference(0.5, ControlType.kPosition);
         verify(dm.drivePID, times(1)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
                 ControlType.kVelocity);
     }
