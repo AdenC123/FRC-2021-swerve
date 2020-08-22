@@ -15,6 +15,8 @@ import com.revrobotics.CANPIDController;
 
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 
+import javax.annotation.Nonnull;
+
 import static frc.robot.Utl.*;
 
 
@@ -87,27 +89,20 @@ public class DriveModule {
     }
 
     /**
-     * Creates a new DriveModule. Ports should be for the same wheel.
-     *
-     * @param drivePort         Port for the motor that drives the wheel forward.
-     * @param spinPort          Port for the motor that spins the wheel around.
-     * @param analogPort        Port for the analog potentiometer, from 0 to 3. The analog potentiometer
-     *                          tracks the spin motor.
-     * @param calibrationOffset The value of the analog potentiometer that will point the module forward.
-     */
-    /**
      * Instantiate a DriveModule. All of instanced robot hardware control classes are passed in so this
      * module can be tested using the JUnit test framework.
-     * @param driveMotor
-     * @param driveEncoder
-     * @param drivePID
-     * @param spinMotor
-     * @param spinEncoder
-     * @param spinPID
-     * @param analogEncoder
+     *
+     * @param driveMotor (CANSparkMax, not null) The drive motor controller.
+     * @param driveEncoder (CANEncoder, not null) The drive motor encoder.
+     * @param drivePID (CANPIDController, not null) The drive motor PID controller.
+     * @param spinMotor (CANSparkMax, not null) The spin motor controller.
+     * @param spinEncoder (CANEncoder, not null) The spin motor encoder.
+     * @param spinPID (CANPIDController, not null) The spin motor PID controller.
+     * @param analogEncoder (AnalogPotentiometer, not null) The spin analog position encoder which provides
+     *                      the absolute spin position of the module.
      * @param calibrationOffset The value of the analog potentiometer that will point the module forward.
      */
-    public DriveModule(CANSparkMax driveMotor, CANEncoder driveEncoder, CANPIDController drivePID,
+    public DriveModule(@Nonnull CANSparkMax driveMotor, CANEncoder driveEncoder, CANPIDController drivePID,
                        CANSparkMax spinMotor, CANEncoder spinEncoder, CANPIDController spinPID,
                        AnalogPotentiometer analogEncoder, double calibrationOffset) {
 

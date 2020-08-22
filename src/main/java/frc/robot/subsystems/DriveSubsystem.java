@@ -27,9 +27,9 @@ public class DriveSubsystem extends SubsystemBase {
 
     // the drive geometry
     private final double LENGTH_OVER_DIAGONAL =
-            Constants.DRIVE_LENGTH / Utl.length(Constants.DRIVE_LENGTH, Constants.DRIVE_WIDTH);
+            Constants.DRIVE_LENGTH / Constants.DRIVE_DIAGONAL;
     private final double WIDTH_OVER_DIAGONAL =
-            Constants.DRIVE_WIDTH / Utl.length(Constants.DRIVE_LENGTH, Constants.DRIVE_WIDTH);
+            Constants.DRIVE_WIDTH / Constants.DRIVE_DIAGONAL;
 
     // keep track of last angles
     private double m_RF_lastRadians = 0.0;

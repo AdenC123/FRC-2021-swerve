@@ -39,5 +39,31 @@ public class TestDriveModule {
         // OK, this is the example in the technical documentation, which should have
         // set the spin encoder position to 4.5
         verify(spinEncoder, times(1)).setPosition(4.5);
+        verify(spinPID, times(1)).setReference(0.0, ControlType.kPosition);
+    }
+
+    @Test
+    @DisplayName("Test setRadiansAndSpeed(Math.toRadians(10.0),1.0)")
+    void test_set_10_1() {
+        // basic code representations for physical hardware
+        CANSparkMax driveMotor = mock(CANSparkMax.class);
+        CANSparkMax spinMotor = mock(CANSparkMax.class);
+        AnalogPotentiometer analogEncoder = mock(AnalogPotentiometer.class);
+        when(analogEncoder.get()).thenReturn(0.375);
+        // derived representations of components embedded in the physical hardware
+        CANEncoder driveEncoder = mock(CANEncoder.class);
+        CANPIDController drivePID = mock(CANPIDController.class);
+        CANEncoder spinEncoder = mock(CANEncoder.class);
+        CANPIDController spinPID = mock(CANPIDController.class);
+        DriveModule driveModule = new DriveModule(driveMotor, driveEncoder, drivePID,
+                spinMotor, spinEncoder, spinPID,
+                analogEncoder, 0.125);
+        // OK, this is the example in the technical documentation, which should have
+        // set the spin encoder position to 4.5
+        verify(spinEncoder, times(1)).setPosition(4.5);
+        verify(spinPID, times(1)).setReference(0.0, ControlType.kPosition);
+        driveModule.setRadiansAndSpeed(Math.toRadians(10.0),1.0);
+        verify(spinPID, times(2)).setReference(0.5, ControlType.kPosition);
+        verify(drivePID, times(1)).setReference(1.0, ControlType.kVelocity);
     }
 }

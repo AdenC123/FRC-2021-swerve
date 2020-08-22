@@ -48,18 +48,20 @@ public final class Constants {
     // This is the maximum velocity read by the encoders being used to control the drive speed. The actual
     // maximum is closer to 5700, but we have scaled that down a bit to account for friction, drag, lower
     // battery voltage, etc.
-    public static double MAX_DRIVE_VELOCITY = 5500;
+    public static double MAX_DRIVE_VELOCITY = 5000;
 
     // length and width from center of the wheels, in cm (unit doesn't matter)
     public static double DRIVE_LENGTH = 57.4;
     public static double DRIVE_WIDTH = 57.7;
+    public static double DRIVE_DIAGONAL = Utl.length(DRIVE_LENGTH, DRIVE_WIDTH);
+    public static double DRIVE_RADIUS = DRIVE_DIAGONAL / 2.0;
 
     // maximum linear speed and rotational speed. What we are really interested in knowing is how the robot
     // can travel or turn in one command cycle at full speed because for path following we need to know how
     // big to make the increments along the path, and need a pretty good estimate of where the robot is for
     // making course corrections.
-    public static double MAX_METERS_PER_SEC = 3.5147;
-    public static double MAX_RADIANS_PER_SEC = 8.637;
+    public static double MAX_METERS_PER_SEC = 3.1951;
+    public static double MAX_RADIANS_PER_SEC = MAX_METERS_PER_SEC / DRIVE_RADIUS;
 
     // PID values
     public static double SPIN_kP = 0.25;
