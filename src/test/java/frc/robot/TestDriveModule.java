@@ -54,7 +54,6 @@ public class TestDriveModule {
         verify(pid, times(1)).setD(0.0);
         verify(pid, times(1)).setIZone(kIZone);
         verify(pid, times(1)).setOutputRange(-1.0, 1.0);
-        verify(pid, times(1)).setD(0.0);
     }
 
     @Test

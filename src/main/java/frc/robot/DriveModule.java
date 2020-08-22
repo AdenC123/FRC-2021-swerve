@@ -160,7 +160,6 @@ public class DriveModule {
         pid.setD(0.0);
         pid.setIZone(kIZone);
         pid.setOutputRange(-1.0, 1.0);
-        pid.setD(0.0);
     }
 
     /**
