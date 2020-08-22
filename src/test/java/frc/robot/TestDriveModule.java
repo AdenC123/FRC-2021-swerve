@@ -20,50 +20,56 @@ import static org.mockito.Mockito.*;
 @RunWith(JUnitPlatform.class)
 public class TestDriveModule {
 
+    private class InitializedDriveModule {
+        // basic code representations for physical hardware
+        final CANSparkMax driveMotor = mock(CANSparkMax.class);
+        final CANSparkMax spinMotor = mock(CANSparkMax.class);
+        final AnalogPotentiometer analogEncoder = mock(AnalogPotentiometer.class);
+        // derived representations of components embedded in the physical hardware
+        final CANEncoder driveEncoder = mock(CANEncoder.class);
+        final CANPIDController drivePID = mock(CANPIDController.class);
+        final CANEncoder spinEncoder = mock(CANEncoder.class);
+        final CANPIDController spinPID = mock(CANPIDController.class);
+        final DriveModule driveModule;
+        public InitializedDriveModule() {
+            when(analogEncoder.get()).thenReturn(0.375);
+            driveModule = new DriveModule(driveMotor, driveEncoder, drivePID,
+                    spinMotor, spinEncoder, spinPID,
+                    analogEncoder, 0.125);
+            // OK, this is the example in the technical documentation, which should have
+            // set the spin encoder position to 4.5. Id should also have setup the PID
+            // constants for the spin and drive PIDs - verify all of the calls to the PID
+            // so all counters are reset.
+            verifyPid(drivePID, Constants.DRIVE_kFF, Constants.DRIVE_kP, Constants.DRIVE_kI, Constants.DRIVE_IZONE);
+            verifyPid(spinPID, 0.0, Constants.SPIN_kP, Constants.SPIN_kI, 0.0);
+            verify(spinEncoder, times(1)).setPosition(4.5);
+            verify(spinPID, times(1)).setReference(0.0, ControlType.kPosition);
+        }
+    }
+
+    private void verifyPid(CANPIDController pid, double kFF, double kP, double kI, double kIZone) {
+        verify(pid, times(1)).setFF(kFF);
+        verify(pid, times(1)).setP(kP);
+        verify(pid, times(1)).setI(kI);
+        verify(pid, times(1)).setD(0.0);
+        verify(pid, times(1)).setIZone(kIZone);
+        verify(pid, times(1)).setOutputRange(-1.0, 1.0);
+        verify(pid, times(1)).setD(0.0);
+    }
+
     @Test
     @DisplayName("Test Calibration")
     void test_calibration() {
-        // basic code representations for physical hardware
-        CANSparkMax driveMotor = mock(CANSparkMax.class);
-        CANSparkMax spinMotor = mock(CANSparkMax.class);
-        AnalogPotentiometer analogEncoder = mock(AnalogPotentiometer.class);
-        when(analogEncoder.get()).thenReturn(0.375);
-        // derived representations of components embedded in the physical hardware
-        CANEncoder driveEncoder = mock(CANEncoder.class);
-        CANPIDController drivePID = mock(CANPIDController.class);
-        CANEncoder spinEncoder = mock(CANEncoder.class);
-        CANPIDController spinPID = mock(CANPIDController.class);
-        DriveModule driveModule = new DriveModule(driveMotor, driveEncoder, drivePID,
-                spinMotor, spinEncoder, spinPID,
-                analogEncoder, 0.125);
-        // OK, this is the example in the technical documentation, which should have
-        // set the spin encoder position to 4.5
-        verify(spinEncoder, times(1)).setPosition(4.5);
-        verify(spinPID, times(1)).setReference(0.0, ControlType.kPosition);
+        new InitializedDriveModule();
     }
 
     @Test
     @DisplayName("Test setRadiansAndSpeed(Math.toRadians(10.0),1.0)")
     void test_set_10_1() {
-        // basic code representations for physical hardware
-        CANSparkMax driveMotor = mock(CANSparkMax.class);
-        CANSparkMax spinMotor = mock(CANSparkMax.class);
-        AnalogPotentiometer analogEncoder = mock(AnalogPotentiometer.class);
-        when(analogEncoder.get()).thenReturn(0.375);
-        // derived representations of components embedded in the physical hardware
-        CANEncoder driveEncoder = mock(CANEncoder.class);
-        CANPIDController drivePID = mock(CANPIDController.class);
-        CANEncoder spinEncoder = mock(CANEncoder.class);
-        CANPIDController spinPID = mock(CANPIDController.class);
-        DriveModule driveModule = new DriveModule(driveMotor, driveEncoder, drivePID,
-                spinMotor, spinEncoder, spinPID,
-                analogEncoder, 0.125);
-        // OK, this is the example in the technical documentation, which should have
-        // set the spin encoder position to 4.5
-        verify(spinEncoder, times(1)).setPosition(4.5);
-        verify(spinPID, times(1)).setReference(0.0, ControlType.kPosition);
-        driveModule.setRadiansAndSpeed(Math.toRadians(10.0),1.0);
-        verify(spinPID, times(2)).setReference(0.5, ControlType.kPosition);
-        verify(drivePID, times(1)).setReference(1.0, ControlType.kVelocity);
+        InitializedDriveModule dm = new InitializedDriveModule();
+        dm.driveModule.setRadiansAndSpeed(Math.toRadians(10.0),1.0);
+        verify(dm.spinPID, times(2)).setReference(0.5, ControlType.kPosition);
+        verify(dm.drivePID, times(1)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
+                ControlType.kVelocity);
     }
 }
