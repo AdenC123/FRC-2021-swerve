@@ -25,9 +25,6 @@ import static frc.robot.Utl.*;
  */
 public class DriveModule {
 
-    // Define this as a constant (only do the math once)
-    private static final double RADIANS_TO_TICS = 18.0 / TWO_PI;
-
     // This is the physical hardware wired to the roborio
     private final CANSparkMax m_driveMotor;
     private final CANSparkMax m_spinMotor;
@@ -260,7 +257,7 @@ public class DriveModule {
         }
 
         // Compute and set the spin value
-        m_lastEncoder += (deltaRadians * RADIANS_TO_TICS);
+        m_lastEncoder += (deltaRadians * Constants.RADIANS_TO_SPIN_ENCODER);
         m_spinPID.setReference(m_lastEncoder, ControlType.kPosition);
 
         // Compute and set the speed value

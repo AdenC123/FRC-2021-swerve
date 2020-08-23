@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import static frc.robot.Utl.TWO_PI;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants.  This class should not be used for any other purpose.  All constants should be
@@ -16,6 +18,7 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
 
     public static final class MotorControllers {
         public static final int
@@ -48,20 +51,22 @@ public final class Constants {
     // This is the maximum velocity read by the encoders being used to control the drive speed. The actual
     // maximum is closer to 5700, but we have scaled that down a bit to account for friction, drag, lower
     // battery voltage, etc.
-    public static double MAX_DRIVE_VELOCITY = 5000;
+    public static final double MAX_DRIVE_VELOCITY = 5000;
 
-    // length and width from center of the wheels, in cm (unit doesn't matter)
-    public static double DRIVE_LENGTH = 57.4;
-    public static double DRIVE_WIDTH = 57.7;
-    public static double DRIVE_DIAGONAL = Utl.length(DRIVE_LENGTH, DRIVE_WIDTH);
-    public static double DRIVE_RADIUS = DRIVE_DIAGONAL / 2.0;
+    // length and width from center of the wheels, in m
+    public static final double DRIVE_LENGTH = 0.574;
+    public static final double DRIVE_WIDTH = 0.577;
+    public static final double DRIVE_DIAGONAL = Utl.length(DRIVE_LENGTH, DRIVE_WIDTH);
+    public static final double DRIVE_RADIUS = DRIVE_DIAGONAL / 2.0;
+    // 18 motor revolutions to 1 spin of the drive wheel
+    public static final double RADIANS_TO_SPIN_ENCODER = 18.0 / TWO_PI;
 
     // maximum linear speed and rotational speed. What we are really interested in knowing is how the robot
     // can travel or turn in one command cycle at full speed because for path following we need to know how
     // big to make the increments along the path, and need a pretty good estimate of where the robot is for
     // making course corrections.
-    public static double MAX_METERS_PER_SEC = 3.1951;
-    public static double MAX_RADIANS_PER_SEC = MAX_METERS_PER_SEC / DRIVE_RADIUS;
+    public static final double MAX_METERS_PER_SEC = 3.1951;
+    public static final double MAX_RADIANS_PER_SEC = MAX_METERS_PER_SEC / DRIVE_RADIUS;
 
     // PID values
     public static double SPIN_kP = 0.25;

@@ -31,6 +31,7 @@ public class TestDriveModule {
         final CANEncoder spinEncoder = mock(CANEncoder.class);
         final CANPIDController spinPID = mock(CANPIDController.class);
         final DriveModule driveModule;
+
         public InitializedDriveModule() {
             when(analogEncoder.get()).thenReturn(0.375);
             driveModule = new DriveModule(driveMotor, driveEncoder, drivePID,
@@ -65,10 +66,72 @@ public class TestDriveModule {
     @Test
     @DisplayName("Test setRadiansAndSpeed(Math.toRadians(10.0),1.0)")
     void test_set_10_1() {
+        // Should spin positively
         InitializedDriveModule dm = new InitializedDriveModule();
-        dm.driveModule.setRadiansAndSpeed(Math.toRadians(10.0),1.0);
-        verify(dm.spinPID, times(1)).setReference(0.5, ControlType.kPosition);
+        dm.driveModule.setRadiansAndSpeed(Math.toRadians(10.0), 1.0);
+        verify(dm.spinPID, times(1)).setReference(Math.toRadians(10.0) * Constants.RADIANS_TO_SPIN_ENCODER,
+                ControlType.kPosition);
         verify(dm.drivePID, times(1)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
+                ControlType.kVelocity);
+    }
+
+    @Test
+    @DisplayName("Test setRadiansAndSpeed(Math.toRadians(80.0),1.0)")
+    void test_set_80_1() {
+        // Should spin positively
+        InitializedDriveModule dm = new InitializedDriveModule();
+        dm.driveModule.setRadiansAndSpeed(Math.toRadians(80.0), 1.0);
+        verify(dm.spinPID, times(1)).setReference(Math.toRadians(80.0) * Constants.RADIANS_TO_SPIN_ENCODER,
+                ControlType.kPosition);
+        verify(dm.drivePID, times(1)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
+                ControlType.kVelocity);
+    }
+
+    @Test
+    @DisplayName("Test setRadiansAndSpeed(Math.toRadians(100.0),1.0)")
+    void test_set_100_1() {
+        // Should spin negatively and go backwards
+        InitializedDriveModule dm = new InitializedDriveModule();
+        dm.driveModule.setRadiansAndSpeed(Math.toRadians(100.0), 1.0);
+        verify(dm.spinPID, times(1)).setReference(Math.toRadians(-80.0) * Constants.RADIANS_TO_SPIN_ENCODER,
+                ControlType.kPosition);
+        verify(dm.drivePID, times(1)).setReference(-(1.0 * Constants.MAX_DRIVE_VELOCITY),
+                ControlType.kVelocity);
+    }
+
+    @Test
+    @DisplayName("Test setRadiansAndSpeed(Math.toRadians(-10.0),1.0)")
+    void test_set_neg_10_1() {
+        // Should spin negatively
+        InitializedDriveModule dm = new InitializedDriveModule();
+        dm.driveModule.setRadiansAndSpeed(Math.toRadians(-10.0), 1.0);
+        verify(dm.spinPID, times(1)).setReference(Math.toRadians(-10.0) * Constants.RADIANS_TO_SPIN_ENCODER,
+                ControlType.kPosition);
+        verify(dm.drivePID, times(1)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
+                ControlType.kVelocity);
+    }
+
+    @Test
+    @DisplayName("Test setRadiansAndSpeed(Math.toRadians(-80.0),1.0)")
+    void test_set_neg_80_1() {
+        // Should spin negatively
+        InitializedDriveModule dm = new InitializedDriveModule();
+        dm.driveModule.setRadiansAndSpeed(Math.toRadians(-80.0), 1.0);
+        verify(dm.spinPID, times(1)).setReference(Math.toRadians(-80.0) * Constants.RADIANS_TO_SPIN_ENCODER,
+                ControlType.kPosition);
+        verify(dm.drivePID, times(1)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
+                ControlType.kVelocity);
+    }
+
+    @Test
+    @DisplayName("Test setRadiansAndSpeed(Math.toRadians(-100.0),1.0)")
+    void test_set_neg_100_1() {
+        // Should spin positively and go backwards
+        InitializedDriveModule dm = new InitializedDriveModule();
+        dm.driveModule.setRadiansAndSpeed(Math.toRadians(100.0), 1.0);
+        verify(dm.spinPID, times(1)).setReference(Math.toRadians(80.0) * Constants.RADIANS_TO_SPIN_ENCODER,
+                ControlType.kPosition);
+        verify(dm.drivePID, times(1)).setReference(-(1.0 * Constants.MAX_DRIVE_VELOCITY),
                 ControlType.kVelocity);
     }
 }

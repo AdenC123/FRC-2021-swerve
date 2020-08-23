@@ -38,6 +38,9 @@ public class DriveSubsystem extends SubsystemBase {
     private double m_LR_lastRadians = 0.0;
 
     // keep track of the last chassis speeds for odometry
+    private double m_thisChassisForward = 0.0;
+    private double m_thisChassisStrafe = 0.0;
+    private double m_thisChassisRotation = 0.0;
     private long m_lastTime = System.currentTimeMillis();
     private double m_lastHeading = 0.0;
     private double m_lastChassisForward = 0.0;
@@ -138,9 +141,9 @@ public class DriveSubsystem extends SubsystemBase {
         m_rr.setRadiansAndSpeed(m_RR_lastRadians, rrSpeed);
 
         // save the values we set for use in odometry calculations
-        m_lastChassisForward = forward;
-        m_lastChassisStrafe = strafe;
-        m_lastChassisRotation = rotation;
+        m_thisChassisForward = forward;
+        m_thisChassisStrafe = strafe;
+        m_thisChassisRotation = rotation;
     }
 
     /**
@@ -219,9 +222,14 @@ public class DriveSubsystem extends SubsystemBase {
         double sinHeading = Math.sin(aveHeading);
         double cosHeading = Math.cos(aveHeading);
         double maxDistanceInInterval = Constants.MAX_METERS_PER_SEC * (double)(now - m_lastTime) / 1000.0;
-        m_fieldX += ((m_lastChassisForward * sinHeading) + (m_lastChassisStrafe * cosHeading)) * maxDistanceInInterval;
-        m_fieldY += ((m_lastChassisForward * cosHeading) - (m_lastChassisStrafe * sinHeading)) * maxDistanceInInterval;
+        double aveForward = (m_lastChassisForward + m_thisChassisForward) * 0.5;
+        double aveStrafe = (m_lastChassisStrafe + m_thisChassisStrafe) * 0.5;
+        m_fieldX += ((aveForward * sinHeading) + (aveStrafe * cosHeading)) * maxDistanceInInterval;
+        m_fieldY += ((aveForward * cosHeading) - (aveStrafe * sinHeading)) * maxDistanceInInterval;
         m_lastHeading = m_fieldHeading = currentHeading;
+        m_lastChassisForward = m_thisChassisForward;
+        m_lastChassisStrafe = m_thisChassisStrafe;
+        m_lastChassisRotation = m_thisChassisRotation;
         m_lastTime = now;
 
     }
