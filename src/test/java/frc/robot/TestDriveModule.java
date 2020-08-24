@@ -47,6 +47,7 @@ public class TestDriveModule {
             verifyPid(spinPID, 0.0, Constants.SPIN_kP, Constants.SPIN_kI, 0.0);
             verify(spinEncoder, times(1)).setPosition(4.5);
             verify(spinPID, times(1)).setReference(0.0, ControlType.kPosition);
+            reset(spinEncoder, drivePID, spinPID);
         }
     }
 
@@ -144,21 +145,14 @@ public class TestDriveModule {
         // need 2 less than 90 steps to get the front of the wheel there.
         InitializedDriveModule dm = new InitializedDriveModule();
         dm.driveModule.setRadiansAndSpeed(Math.toRadians(85.0), 1.0);
-        verify(dm.spinPID, times(1)).setReference(Math.toRadians(85.0) * Constants.RADIANS_TO_SPIN_ENCODER,
-                ControlType.kPosition);
-        verify(dm.drivePID, times(1)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
-                ControlType.kVelocity);
         dm.driveModule.setRadiansAndSpeed(Math.toRadians(170.0), 1.0);
-        verify(dm.spinPID, times(1)).setReference(Math.toRadians(170.0) * Constants.RADIANS_TO_SPIN_ENCODER,
-                ControlType.kPosition);
-        verify(dm.drivePID, times(2)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
-                ControlType.kVelocity);
         // This is the 180 boundary cross
+        reset(dm.spinPID,dm.drivePID);
         dm.driveModule.setRadiansAndSpeed(Math.toRadians(-170.0), 1.0);
         verify(dm.spinPID, times(1)).setReference(
                 AdditionalMatchers.eq(Math.toRadians(190.0) * Constants.RADIANS_TO_SPIN_ENCODER,.00001),
                 ArgumentMatchers.eq(ControlType.kPosition));
-        verify(dm.drivePID, times(3)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
+        verify(dm.drivePID, times(1)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
                 ControlType.kVelocity);
     }
 
@@ -169,21 +163,14 @@ public class TestDriveModule {
         // need 2 less than -90 steps to get the front of the wheel there.
         InitializedDriveModule dm = new InitializedDriveModule();
         dm.driveModule.setRadiansAndSpeed(Math.toRadians(-85.0), 1.0);
-        verify(dm.spinPID, times(1)).setReference(Math.toRadians(-85.0) * Constants.RADIANS_TO_SPIN_ENCODER,
-                ControlType.kPosition);
-        verify(dm.drivePID, times(1)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
-                ControlType.kVelocity);
         dm.driveModule.setRadiansAndSpeed(Math.toRadians(-170.0), 1.0);
-        verify(dm.spinPID, times(1)).setReference(Math.toRadians(-170.0) * Constants.RADIANS_TO_SPIN_ENCODER,
-                ControlType.kPosition);
-        verify(dm.drivePID, times(2)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
-                ControlType.kVelocity);
         // This is the 180 boundary cross
+        reset(dm.spinPID,dm.drivePID);
         dm.driveModule.setRadiansAndSpeed(Math.toRadians(170.0), 1.0);
         verify(dm.spinPID, times(1)).setReference(
                 AdditionalMatchers.eq(Math.toRadians(-190.0) * Constants.RADIANS_TO_SPIN_ENCODER,.00001),
                 ArgumentMatchers.eq(ControlType.kPosition));
-        verify(dm.drivePID, times(3)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
+        verify(dm.drivePID, times(1)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
                 ControlType.kVelocity);
     }
 }
