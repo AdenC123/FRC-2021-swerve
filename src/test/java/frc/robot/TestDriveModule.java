@@ -22,6 +22,10 @@ import static org.mockito.Mockito.*;
 @RunWith(JUnitPlatform.class)
 public class TestDriveModule {
 
+    /**
+     * This is a class that creates an initialized drive module using mocked motor controllers, motor encoders,
+     * motor PID and analog encoder.
+     */
     private class InitializedDriveModule {
         // basic code representations for physical hardware
         final CANSparkMax driveMotor = mock(CANSparkMax.class);
@@ -34,6 +38,10 @@ public class TestDriveModule {
         final CANPIDController spinPID = mock(CANPIDController.class);
         final DriveModule driveModule;
 
+        /**
+         * Instantiate, initialize, and verify initialization called everything as expected. Reset all of the mock
+         * objects that were touched in initialization before exiting this instantiation.
+         */
         public InitializedDriveModule() {
             when(analogEncoder.get()).thenReturn(0.375);
             driveModule = new DriveModule(driveMotor, driveEncoder, drivePID,
@@ -60,12 +68,19 @@ public class TestDriveModule {
         verify(pid, times(1)).setOutputRange(-1.0, 1.0);
     }
 
+    /**
+     * This just does the instantiation and verifies the initial calibration. If there is a problem here
+     * then all of the other tests will probably fail.
+     */
     @Test
     @DisplayName("Test Calibration")
     void test_calibration() {
         new InitializedDriveModule();
     }
 
+    /**
+     * Test a basic move - 10 degrees clockwise, full speed forward.
+     */
     @Test
     @DisplayName("Test setRadiansAndSpeed(Math.toRadians(10.0),1.0)")
     void test_set_10_1() {
@@ -78,6 +93,9 @@ public class TestDriveModule {
                 ControlType.kVelocity);
     }
 
+    /**
+     * Test a close to, but less than, 90 degree clockwise, full speed. Spin should be clockwise and spped forward
+     */
     @Test
     @DisplayName("Test setRadiansAndSpeed(Math.toRadians(80.0),1.0)")
     void test_set_80_1() {
@@ -90,6 +108,10 @@ public class TestDriveModule {
                 ControlType.kVelocity);
     }
 
+    /**
+     * Test a slightly greater than 90 degree clockwise, full speed. The closest rotation is to orient
+     * the back of the wheel and go backwards - make sure this happens.
+     */
     @Test
     @DisplayName("Test setRadiansAndSpeed(Math.toRadians(100.0),1.0)")
     void test_set_100_1() {
@@ -102,6 +124,9 @@ public class TestDriveModule {
                 ControlType.kVelocity);
     }
 
+    /**
+     * Test a basic move - 10 degrees counter-clockwise, full speed.
+     */
     @Test
     @DisplayName("Test setRadiansAndSpeed(Math.toRadians(-10.0),1.0)")
     void test_set_neg_10_1() {
@@ -171,6 +196,38 @@ public class TestDriveModule {
                 AdditionalMatchers.eq(Math.toRadians(-190.0) * Constants.RADIANS_TO_SPIN_ENCODER,.00001),
                 ArgumentMatchers.eq(ControlType.kPosition));
         verify(dm.drivePID, times(1)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
+                ControlType.kVelocity);
+    }
+
+    /**
+     * The forwards-backwards logic finds the least spin of the wheel (>= 90.0) and the appropriate forward/backward
+     * multiplier. A concern it the programming has been making sure the forward-backward states are handled
+     * correctly. Specifically, if I have 2 forward commands it a row or 2 backwards commands in a row, does the
+     * module correctly remember what it is doing and not do a 180 degree spin.
+     */
+    @Test
+    @DisplayName("Test backwards forwards")
+    void test_forward_backward() {
+        // Go forward 2 steps
+        InitializedDriveModule dm = new InitializedDriveModule();
+        dm.driveModule.setRadiansAndSpeed(0.0, 1.0);
+        dm.driveModule.setRadiansAndSpeed(0.0, 1.0);
+        verify(dm.spinPID, times(2)).setReference( 0.0, ControlType.kPosition);
+        verify(dm.drivePID, times(2)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
+                ControlType.kVelocity);
+        // Go backwards (180 degrees) 2 steps - should be no spin and negative speed
+        reset(dm.spinPID,dm.drivePID);
+        dm.driveModule.setRadiansAndSpeed(Math.PI, 1.0);
+        dm.driveModule.setRadiansAndSpeed(Math.PI, 1.0);
+        verify(dm.spinPID, times(2)).setReference( 0.0, ControlType.kPosition);
+        verify(dm.drivePID, times(2)).setReference(-1.0 * Constants.MAX_DRIVE_VELOCITY,
+                ControlType.kVelocity);
+        // Go forwards again steps - should be no spin and positive speed
+        reset(dm.spinPID,dm.drivePID);
+        dm.driveModule.setRadiansAndSpeed(0.0, 1.0);
+        dm.driveModule.setRadiansAndSpeed(0.0, 1.0);
+        verify(dm.spinPID, times(2)).setReference( 0.0, ControlType.kPosition);
+        verify(dm.drivePID, times(2)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
                 ControlType.kVelocity);
     }
 }
