@@ -265,7 +265,6 @@ public class DriveModule {
         m_drivePID.setReference(m_lastSpeed, ControlType.kVelocity);
 
         // remember the last spin direction and speed this module was set to.
-        m_lastSpeed = speed;
         m_lastRadians = targetRadians;
     }
 }
