@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 import org.mockito.AdditionalMatchers;
+import org.mockito.ArgumentMatchers;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -156,7 +157,7 @@ public class TestDriveModule {
         dm.driveModule.setRadiansAndSpeed(Math.toRadians(-170.0), 1.0);
         verify(dm.spinPID, times(1)).setReference(
                 AdditionalMatchers.eq(Math.toRadians(190.0) * Constants.RADIANS_TO_SPIN_ENCODER,.00001),
-                ControlType.kPosition);
+                ArgumentMatchers.eq(ControlType.kPosition));
         verify(dm.drivePID, times(3)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
                 ControlType.kVelocity);
     }
@@ -181,7 +182,7 @@ public class TestDriveModule {
         dm.driveModule.setRadiansAndSpeed(Math.toRadians(170.0), 1.0);
         verify(dm.spinPID, times(1)).setReference(
                 AdditionalMatchers.eq(Math.toRadians(-190.0) * Constants.RADIANS_TO_SPIN_ENCODER,.00001),
-                ControlType.kPosition);
+                ArgumentMatchers.eq(ControlType.kPosition));
         verify(dm.drivePID, times(3)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
                 ControlType.kVelocity);
     }
