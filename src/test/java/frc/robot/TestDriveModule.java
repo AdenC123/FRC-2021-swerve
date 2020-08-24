@@ -128,10 +128,58 @@ public class TestDriveModule {
     void test_set_neg_100_1() {
         // Should spin positively and go backwards
         InitializedDriveModule dm = new InitializedDriveModule();
-        dm.driveModule.setRadiansAndSpeed(Math.toRadians(100.0), 1.0);
+        dm.driveModule.setRadiansAndSpeed(Math.toRadians(-100.0), 1.0);
         verify(dm.spinPID, times(1)).setReference(Math.toRadians(80.0) * Constants.RADIANS_TO_SPIN_ENCODER,
                 ControlType.kPosition);
         verify(dm.drivePID, times(1)).setReference(-(1.0 * Constants.MAX_DRIVE_VELOCITY),
+                ControlType.kVelocity);
+    }
+
+    @Test
+    @DisplayName("Test 180 boundary clockwise")
+    void test_180_boundary_clockwise() {
+        // Should spin positively and keep spinning positively at the 180 boundary - kind of a pain because we
+        // need 2 less than 90 steps to get the front of the wheel there.
+        InitializedDriveModule dm = new InitializedDriveModule();
+        dm.driveModule.setRadiansAndSpeed(Math.toRadians(85.0), 1.0);
+        verify(dm.spinPID, times(1)).setReference(Math.toRadians(85.0) * Constants.RADIANS_TO_SPIN_ENCODER,
+                ControlType.kPosition);
+        verify(dm.drivePID, times(1)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
+                ControlType.kVelocity);
+        dm.driveModule.setRadiansAndSpeed(Math.toRadians(170.0), 1.0);
+        verify(dm.spinPID, times(1)).setReference(Math.toRadians(170.0) * Constants.RADIANS_TO_SPIN_ENCODER,
+                ControlType.kPosition);
+        verify(dm.drivePID, times(1)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
+                ControlType.kVelocity);
+        // This is the 180 boundary cross
+        dm.driveModule.setRadiansAndSpeed(Math.toRadians(-170.0), 1.0);
+        verify(dm.spinPID, times(1)).setReference(Math.toRadians(190.0) * Constants.RADIANS_TO_SPIN_ENCODER,
+                ControlType.kPosition);
+        verify(dm.drivePID, times(1)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
+                ControlType.kVelocity);
+    }
+
+    @Test
+    @DisplayName("Test 180 boundary counter clockwise")
+    void test_180_boundary_counter_clockwise() {
+        // Should spin negatively and keep spinning negatively at the 180 boundary - kind of a pain because we
+        // need 2 less than -90 steps to get the front of the wheel there.
+        InitializedDriveModule dm = new InitializedDriveModule();
+        dm.driveModule.setRadiansAndSpeed(Math.toRadians(-85.0), 1.0);
+        verify(dm.spinPID, times(1)).setReference(Math.toRadians(-85.0) * Constants.RADIANS_TO_SPIN_ENCODER,
+                ControlType.kPosition);
+        verify(dm.drivePID, times(1)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
+                ControlType.kVelocity);
+        dm.driveModule.setRadiansAndSpeed(Math.toRadians(-170.0), 1.0);
+        verify(dm.spinPID, times(1)).setReference(Math.toRadians(-170.0) * Constants.RADIANS_TO_SPIN_ENCODER,
+                ControlType.kPosition);
+        verify(dm.drivePID, times(1)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
+                ControlType.kVelocity);
+        // This is the 180 boundary cross
+        dm.driveModule.setRadiansAndSpeed(Math.toRadians(170.0), 1.0);
+        verify(dm.spinPID, times(1)).setReference(Math.toRadians(-190.0) * Constants.RADIANS_TO_SPIN_ENCODER,
+                ControlType.kPosition);
+        verify(dm.drivePID, times(1)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
                 ControlType.kVelocity);
     }
 }
