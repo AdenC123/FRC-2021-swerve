@@ -197,11 +197,7 @@ public class TestDriveModule {
     void test_set_neg_10_1() {
         // Should spin negatively
         InitializedDriveModule dm = new InitializedDriveModule();
-        dm.driveModule.setRadiansAndSpeed(Math.toRadians(-10.0), 1.0);
-        verify(dm.spinPID, times(1)).setReference(Math.toRadians(-10.0) * Constants.RADIANS_TO_SPIN_ENCODER,
-                ControlType.kPosition);
-        verify(dm.drivePID, times(1)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
-                ControlType.kVelocity);
+        verifyRadiansAndSpeed(dm,Math.toRadians(-10.0), 1.0,Math.toRadians(-10.0), 1.0);
     }
 
     @Test
@@ -209,11 +205,7 @@ public class TestDriveModule {
     void test_set_neg_80_1() {
         // Should spin negatively
         InitializedDriveModule dm = new InitializedDriveModule();
-        dm.driveModule.setRadiansAndSpeed(Math.toRadians(-80.0), 1.0);
-        verify(dm.spinPID, times(1)).setReference(Math.toRadians(-80.0) * Constants.RADIANS_TO_SPIN_ENCODER,
-                ControlType.kPosition);
-        verify(dm.drivePID, times(1)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
-                ControlType.kVelocity);
+        verifyRadiansAndSpeed(dm,Math.toRadians(-80.0), 0.5,Math.toRadians(-80.0), 0.5);
     }
 
     @Test
@@ -221,11 +213,7 @@ public class TestDriveModule {
     void test_set_neg_100_1() {
         // Should spin positively and go backwards
         InitializedDriveModule dm = new InitializedDriveModule();
-        dm.driveModule.setRadiansAndSpeed(Math.toRadians(-100.0), 1.0);
-        verify(dm.spinPID, times(1)).setReference(Math.toRadians(80.0) * Constants.RADIANS_TO_SPIN_ENCODER,
-                ControlType.kPosition);
-        verify(dm.drivePID, times(1)).setReference(-(1.0 * Constants.MAX_DRIVE_VELOCITY),
-                ControlType.kVelocity);
+        verifyRadiansAndSpeed(dm,Math.toRadians(-100.0), 0.25,Math.toRadians(80.0), -0.25);
     }
 
     @Test
