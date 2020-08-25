@@ -160,41 +160,65 @@ public class DriveModule {
     }
 
     /**
-     * Returns the CANEncoder object for the drive motor.
+     * Returns the drive motor velocity (RPM) as read from the encoder
+     *
+     * @return The drive motor velocity (RPM)
      */
-    public CANEncoder getDriveEncoder() {
-        return m_driveEncoder;
+    public double getDriveEncoderVelocity() {
+        return m_driveEncoder.getVelocity();
     }
 
     /**
-     * Returns the CANEncoder object for the spin motor.
+     * Returns the drive motor position as read from the encoder.
+     *
+     * @return The drive motor position as read from the encoder.
      */
-    public CANEncoder getSpinEncoder() {
-        return m_spinEncoder;
+    public double getDriveEncoderPosition() {
+        return m_driveEncoder.getPosition();
     }
 
     /**
-     * Returns the CANPIDController object for the spin motor.
+     * Returns the spin motor position as read from the encoder.
+     *
+     * @return The spin motor position as read from the encoder.
      */
-    public CANPIDController getSpinPID() {
-        return m_spinPID;
+    public double getSpinEncoderPosition() {
+        return m_spinEncoder.getPosition();
     }
 
     /**
      * Returns the value of the analog encoder as a double. The value goes from 0.0 to 1.0, wrapping around
-     * when the boundary between 0 and 2pi is reached. This method is provided primarily to read the the
+     * when the boundary between 0 and 2pi is reached. This method is provided primarily to read the
      * analog encoder to determine the calibrationOffset that should be used for initialization.
+     *
+     * @return The analog spin encoder position.
      */
-    public double getAnalogEncoder() {
+    public double getAnalogEncoderPosition() {
         return m_analogEncoder.get();
     }
 
-    public CANSparkMax getDriveMotor() {
-        return m_driveMotor;
+    /**
+     *
+     * @return
+     */
+    public double getLastSpeed() {
+        return m_lastSpeed * Constants.MAX_DRIVE_VELOCITY;
     }
 
-    public CANSparkMax getSpinMotor() {
-        return m_spinMotor;
+    /**
+     *
+     * @return
+     */
+    public double getLastNormalizedSpeed() {
+        return m_lastSpeed;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public double getLastRadians() {
+        return m_lastRadians;
     }
 
     /**
@@ -257,14 +281,13 @@ public class DriveModule {
         }
 
         // Compute and set the spin value
+        m_lastRadians = targetRadians;
         m_lastEncoder += (deltaRadians * Constants.RADIANS_TO_SPIN_ENCODER);
         m_spinPID.setReference(m_lastEncoder, ControlType.kPosition);
 
         // Compute and set the speed value
-        m_lastSpeed = speed * Constants.MAX_DRIVE_VELOCITY * m_speedMultiplier;
-        m_drivePID.setReference(m_lastSpeed, ControlType.kVelocity);
-
-        // remember the last spin direction and speed this module was set to.
-        m_lastRadians = targetRadians;
+        m_lastSpeed = speed;
+        speed *= Constants.MAX_DRIVE_VELOCITY * m_speedMultiplier;
+        m_drivePID.setReference(speed, ControlType.kVelocity);
     }
 }

@@ -15,7 +15,7 @@ import org.junit.runner.RunWith;
 import org.mockito.AdditionalMatchers;
 import org.mockito.ArgumentMatchers;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 import static org.mockito.Mockito.*;
 
@@ -69,6 +69,37 @@ public class TestDriveModule {
     }
 
     /**
+     * The deal here is that we are setting a direction and speed for the module, but the actual direction
+     * may be reversed 180, or the module may have gone over the 180 degree spin boundary, so the actual
+     * may not be what was really set, but something that gives the same result.
+     *
+     * @param dm
+     * @param radians
+     * @param speed
+     * @param actualRadians
+     * @param actualSpeed
+     */
+    private void verifyRadiansAndSpeed(InitializedDriveModule dm, double radians, double speed,
+                                       double actualRadians, double actualSpeed) {
+        dm.driveModule.setRadiansAndSpeed(radians, speed);
+        verify(dm.spinPID, times(1)).setReference(
+                AdditionalMatchers.eq(actualRadians * Constants.RADIANS_TO_SPIN_ENCODER,.00001),
+                ArgumentMatchers.eq(ControlType.kPosition));
+        verify(dm.drivePID, times(1)).setReference(actualSpeed * Constants.MAX_DRIVE_VELOCITY,
+                ControlType.kVelocity);
+        // make encoder readings slightly different than what was actually set
+        when(dm.spinEncoder.getPosition()).thenReturn(actualRadians + .001);
+        when(dm.driveEncoder.getVelocity()).thenReturn((actualSpeed * Constants.MAX_DRIVE_VELOCITY) - 3.0);
+        assertEquals(radians, dm.driveModule.getLastRadians());
+        assertEquals(speed, dm.driveModule.getLastNormalizedSpeed());
+        assertEquals(speed * Constants.MAX_DRIVE_VELOCITY, dm.driveModule.getLastSpeed());
+        assertEquals(actualRadians + .001, dm.driveModule.getSpinEncoderPosition());
+        assertEquals((actualSpeed * Constants.MAX_DRIVE_VELOCITY) - 3.0,
+                dm.driveModule.getDriveEncoderPosition());
+
+    }
+
+    /**
      * This just does the instantiation and verifies the initial calibration. If there is a problem here
      * then all of the other tests will probably fail.
      */
@@ -79,6 +110,33 @@ public class TestDriveModule {
     }
 
     /**
+     * Test setting the spin PID K values
+     */
+    @Test
+    @DisplayName("Test setSpinPID")
+    void test_setSpinPID() {
+        // Should spin positively
+        InitializedDriveModule dm = new InitializedDriveModule();
+        dm.driveModule.setSpinPID();
+        verify(dm.spinPID, times(1)).setP(Constants.SPIN_kP);
+        verify(dm.spinPID, times(1)).setI(Constants.SPIN_kI);
+    }
+
+    /**
+     * Test setting the drive PID K values
+     */
+    @Test
+    @DisplayName("Test setDrivePID")
+    void test_setDrivePID() {
+        // Should spin positively
+        InitializedDriveModule dm = new InitializedDriveModule();
+        dm.driveModule.setDrivePID();
+        verify(dm.drivePID, times(1)).setFF(Constants.DRIVE_kFF);
+        verify(dm.drivePID, times(1)).setP(Constants.DRIVE_kP);
+        verify(dm.drivePID, times(1)).setI(Constants.DRIVE_kI);
+    }
+
+    /**
      * Test a basic move - 10 degrees clockwise, full speed forward.
      */
     @Test
@@ -86,7 +144,18 @@ public class TestDriveModule {
     void test_set_10_1() {
         // Should spin positively
         InitializedDriveModule dm = new InitializedDriveModule();
-        dm.driveModule.setRadiansAndSpeed(Math.toRadians(10.0), 1.0);
+        verifyRadiansAndSpeed(dm,Math.toRadians(10.0), 1.0,Math.toRadians(10.0), 1.0);
+    }
+
+    /**
+     * Test a basic move specified in degrees - 10 degrees clockwise, full speed forward.
+     */
+    @Test
+    @DisplayName("Test setDegreesAndSpeed(10.0,1.0)")
+    void test_set_degrees_10_1() {
+        // Should spin positively
+        InitializedDriveModule dm = new InitializedDriveModule();
+        dm.driveModule.setDegreesAndSpeed(10.0, 1.0);
         verify(dm.spinPID, times(1)).setReference(Math.toRadians(10.0) * Constants.RADIANS_TO_SPIN_ENCODER,
                 ControlType.kPosition);
         verify(dm.drivePID, times(1)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
@@ -94,17 +163,17 @@ public class TestDriveModule {
     }
 
     /**
-     * Test a close to, but less than, 90 degree clockwise, full speed. Spin should be clockwise and spped forward
+     * Test a close to, but less than, 90 degree clockwise, half speed. Spin should be clockwise and spped forward
      */
     @Test
-    @DisplayName("Test setRadiansAndSpeed(Math.toRadians(80.0),1.0)")
+    @DisplayName("Test setRadiansAndSpeed(Math.toRadians(80.0),0.5)")
     void test_set_80_1() {
         // Should spin positively
         InitializedDriveModule dm = new InitializedDriveModule();
-        dm.driveModule.setRadiansAndSpeed(Math.toRadians(80.0), 1.0);
+        dm.driveModule.setRadiansAndSpeed(Math.toRadians(80.0), 0.5);
         verify(dm.spinPID, times(1)).setReference(Math.toRadians(80.0) * Constants.RADIANS_TO_SPIN_ENCODER,
                 ControlType.kPosition);
-        verify(dm.drivePID, times(1)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
+        verify(dm.drivePID, times(1)).setReference(0.5 * Constants.MAX_DRIVE_VELOCITY,
                 ControlType.kVelocity);
     }
 
