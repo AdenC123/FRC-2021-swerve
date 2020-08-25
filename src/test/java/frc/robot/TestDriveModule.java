@@ -226,12 +226,7 @@ public class TestDriveModule {
         dm.driveModule.setRadiansAndSpeed(Math.toRadians(170.0), 1.0);
         // This is the 180 boundary cross
         reset(dm.spinPID,dm.drivePID);
-        dm.driveModule.setRadiansAndSpeed(Math.toRadians(-170.0), 1.0);
-        verify(dm.spinPID, times(1)).setReference(
-                AdditionalMatchers.eq(Math.toRadians(190.0) * Constants.RADIANS_TO_SPIN_ENCODER,.00001),
-                ArgumentMatchers.eq(ControlType.kPosition));
-        verify(dm.drivePID, times(1)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
-                ControlType.kVelocity);
+        verifyRadiansAndSpeed(dm,Math.toRadians(-170.0), 0.35,Math.toRadians(190.0), 0.35);
     }
 
     @Test
@@ -244,12 +239,7 @@ public class TestDriveModule {
         dm.driveModule.setRadiansAndSpeed(Math.toRadians(-170.0), 1.0);
         // This is the 180 boundary cross
         reset(dm.spinPID,dm.drivePID);
-        dm.driveModule.setRadiansAndSpeed(Math.toRadians(170.0), 1.0);
-        verify(dm.spinPID, times(1)).setReference(
-                AdditionalMatchers.eq(Math.toRadians(-190.0) * Constants.RADIANS_TO_SPIN_ENCODER,.00001),
-                ArgumentMatchers.eq(ControlType.kPosition));
-        verify(dm.drivePID, times(1)).setReference(1.0 * Constants.MAX_DRIVE_VELOCITY,
-                ControlType.kVelocity);
+        verifyRadiansAndSpeed(dm,Math.toRadians(170.0), 0.35,Math.toRadians(-190.0), 0.35);
     }
 
     /**
