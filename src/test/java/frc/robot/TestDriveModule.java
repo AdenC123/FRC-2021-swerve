@@ -3,10 +3,8 @@ package frc.robot;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANPIDController;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
-import frc.robot.DriveModule;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -87,16 +85,22 @@ public class TestDriveModule {
                 ArgumentMatchers.eq(ControlType.kPosition));
         verify(dm.drivePID, times(1)).setReference(actualSpeed * Constants.MAX_DRIVE_VELOCITY,
                 ControlType.kVelocity);
-        // make encoder readings slightly different than what was actually set
-        when(dm.spinEncoder.getPosition()).thenReturn(actualRadians + .001);
-        when(dm.driveEncoder.getVelocity()).thenReturn((actualSpeed * Constants.MAX_DRIVE_VELOCITY) - 3.0);
+        // make encoder readings slightly different than what was actually set so that when we get these
+        // things we know we are really getting them from the encoder.
+        double spinEncPosition = (actualRadians * Constants.RADIANS_TO_SPIN_ENCODER) + .001;
+        when(dm.spinEncoder.getPosition()).thenReturn(spinEncPosition);
+        double driveEncPosition = Math.random() * 1000.0; // we have no idea what happens with this
+        when(dm.driveEncoder.getPosition()).thenReturn(driveEncPosition);
+        double driveEncVelocity = (actualSpeed * Constants.MAX_DRIVE_VELOCITY) + 3.0;
+        when(dm.driveEncoder.getVelocity()).thenReturn(driveEncVelocity);
+
         assertEquals(radians, dm.driveModule.getLastRadians());
         assertEquals(speed, dm.driveModule.getLastNormalizedSpeed());
         assertEquals(speed * Constants.MAX_DRIVE_VELOCITY, dm.driveModule.getLastSpeed());
-        assertEquals(actualRadians + .001, dm.driveModule.getSpinEncoderPosition());
-        assertEquals((actualSpeed * Constants.MAX_DRIVE_VELOCITY) - 3.0,
-                dm.driveModule.getDriveEncoderPosition());
 
+        assertEquals(spinEncPosition, dm.driveModule.getSpinEncoderPosition());
+        assertEquals(driveEncPosition, dm.driveModule.getDriveEncoderPosition());
+        assertEquals(driveEncVelocity, dm.driveModule.getDriveEncoderVelocity());
     }
 
     /**
@@ -170,11 +174,7 @@ public class TestDriveModule {
     void test_set_80_1() {
         // Should spin positively
         InitializedDriveModule dm = new InitializedDriveModule();
-        dm.driveModule.setRadiansAndSpeed(Math.toRadians(80.0), 0.5);
-        verify(dm.spinPID, times(1)).setReference(Math.toRadians(80.0) * Constants.RADIANS_TO_SPIN_ENCODER,
-                ControlType.kPosition);
-        verify(dm.drivePID, times(1)).setReference(0.5 * Constants.MAX_DRIVE_VELOCITY,
-                ControlType.kVelocity);
+        verifyRadiansAndSpeed(dm,Math.toRadians(80.0), 0.5,Math.toRadians(80.0), 0.5);
     }
 
     /**
@@ -182,15 +182,11 @@ public class TestDriveModule {
      * the back of the wheel and go backwards - make sure this happens.
      */
     @Test
-    @DisplayName("Test setRadiansAndSpeed(Math.toRadians(100.0),1.0)")
+    @DisplayName("Test setRadiansAndSpeed(Math.toRadians(100.0),0.25)")
     void test_set_100_1() {
         // Should spin negatively and go backwards
         InitializedDriveModule dm = new InitializedDriveModule();
-        dm.driveModule.setRadiansAndSpeed(Math.toRadians(100.0), 1.0);
-        verify(dm.spinPID, times(1)).setReference(Math.toRadians(-80.0) * Constants.RADIANS_TO_SPIN_ENCODER,
-                ControlType.kPosition);
-        verify(dm.drivePID, times(1)).setReference(-(1.0 * Constants.MAX_DRIVE_VELOCITY),
-                ControlType.kVelocity);
+        verifyRadiansAndSpeed(dm,Math.toRadians(100.0), 0.25,Math.toRadians(-80.0), -0.25);
     }
 
     /**
