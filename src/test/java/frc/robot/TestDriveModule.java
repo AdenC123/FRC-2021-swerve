@@ -220,7 +220,7 @@ public class TestDriveModule {
     @DisplayName("Test 180 boundary clockwise")
     void test_180_boundary_clockwise() {
         // Should spin positively and keep spinning positively at the 180 boundary - kind of a pain because we
-        // need 2 less than 90 steps to get the front of the wheel there.
+        // need 2 less than 90 degree steps to get the front of the wheel there.
         InitializedDriveModule dm = new InitializedDriveModule();
         dm.driveModule.setRadiansAndSpeed(Math.toRadians(85.0), 1.0);
         dm.driveModule.setRadiansAndSpeed(Math.toRadians(170.0), 1.0);

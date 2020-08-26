@@ -100,7 +100,8 @@ public class DriveSubsystem extends SubsystemBase {
      * @param strafe   Strafe right. From -1 to 1.
      * @param rotation Clockwise rotation. From -1 to 1.
      */
-    private void swerveDriveComponents(double forward, double strafe, double rotation) {
+    private void swerveDriveComponents(double forward, double strafe,
+                                       double rotation) {
 
         // calculate a, b, c and d variables
         double a = strafe - (rotation * LENGTH_OVER_DIAGONAL);
@@ -123,7 +124,7 @@ public class DriveSubsystem extends SubsystemBase {
             rrSpeed /= max;
             forward /= max;
             strafe /= max;
-            rotation /=max;
+            rotation /= max;
         }
 
         // if speed is small or 0, (i.e. essentially stopped), use the last angle because its next motion
@@ -163,9 +164,9 @@ public class DriveSubsystem extends SubsystemBase {
      * Swerve drive with a field-relative direction (angle in radians), a speed and a rotation.
      *
      * @param fieldDirection (double) The direction in radians from -Math.PI to Math.PI where 0.0 is away from the
-     *                  driver, and positive is clockwise.
-     * @param speed     (double) Speed from 0.0 to 1.0.
-     * @param rotation  (double) Clockwise rotation speed from -1.0 to 1.0.
+     *                       driver, and positive is clockwise.
+     * @param speed          (double) Speed from 0.0 to 1.0.
+     * @param rotation       (double) Clockwise rotation speed from -1.0 to 1.0.
      */
     public void swerveDriveFieldRelative(double fieldDirection, double speed, double rotation) {
         double chassisDirection = fieldDirection - m_navx.getHeading();
@@ -190,8 +191,8 @@ public class DriveSubsystem extends SubsystemBase {
      * could also be called during play if machine vision, sensors, or some other method is available
      * o locate the robot on the field.
      *
-     * @param fieldX (double) The X location of the robot on the field.
-     * @param fieldY (double) The Y location of the robot on the field.
+     * @param fieldX  (double) The X location of the robot on the field.
+     * @param fieldY  (double) The Y location of the robot on the field.
      * @param heading (double) The heading of the robot on the field.
      */
     public void setFieldPosition(double fieldX, double fieldY, double heading) {
@@ -202,9 +203,17 @@ public class DriveSubsystem extends SubsystemBase {
         m_lastTime = System.currentTimeMillis();
     }
 
-    public double getFieldX() {return m_fieldX;}
-    public double getFieldY() {return m_fieldY;}
-    public double getFieldHeading() {return m_fieldHeading;}
+    public double getFieldX() {
+        return m_fieldX;
+    }
+
+    public double getFieldY() {
+        return m_fieldY;
+    }
+
+    public double getFieldHeading() {
+        return m_fieldHeading;
+    }
 
     @Override
     public void periodic() {
@@ -216,21 +225,28 @@ public class DriveSubsystem extends SubsystemBase {
         // chassis, and the heading we are at now. For odometry, assume the average of the last heading and current
         // heading approximates the path of the robot and that the last speed set happened pretty
         // instantaneously. In that case, we can make a pretty good guess how the robot moved on the field.
+
+        // Get the average speed and heading for this interval
         double currentHeading = m_navx.getHeading();
         double aveHeading = (m_lastHeading + currentHeading) * 0.5;
-        long now = System.currentTimeMillis();
-        double sinHeading = Math.sin(aveHeading);
-        double cosHeading = Math.cos(aveHeading);
-        double maxDistanceInInterval = Constants.MAX_METERS_PER_SEC * (double)(now - m_lastTime) / 1000.0;
         double aveForward = (m_lastChassisForward + m_thisChassisForward) * 0.5;
         double aveStrafe = (m_lastChassisStrafe + m_thisChassisStrafe) * 0.5;
+
+        // the the maximum distance we could travel in this interval at max speed
+        long now = System.currentTimeMillis();
+        double maxDistanceInInterval = Constants.MAX_METERS_PER_SEC * (double) (now - m_lastTime) / 1000.0;
+
+        // compute the distance in field X and Y and update the field position
+        double sinHeading = Math.sin(aveHeading);
+        double cosHeading = Math.cos(aveHeading);
         m_fieldX += ((aveForward * sinHeading) + (aveStrafe * cosHeading)) * maxDistanceInInterval;
         m_fieldY += ((aveForward * cosHeading) - (aveStrafe * sinHeading)) * maxDistanceInInterval;
+
+        // save the current state as the last state
         m_lastHeading = m_fieldHeading = currentHeading;
         m_lastChassisForward = m_thisChassisForward;
         m_lastChassisStrafe = m_thisChassisStrafe;
         m_lastChassisRotation = m_thisChassisRotation;
         m_lastTime = now;
-
     }
 }
