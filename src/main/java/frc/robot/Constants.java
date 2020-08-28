@@ -91,4 +91,7 @@ public final class Constants {
 
     // temp variable used in DriveDistance
     public static double DRIVE_SPEED = 0.0;
+
+    // PID values for rotation to target
+    public static double TARGET_kP = 0.5;
 }

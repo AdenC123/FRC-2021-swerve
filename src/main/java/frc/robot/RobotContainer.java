@@ -21,6 +21,7 @@ import frc.robot.commands.DriveCommand;
 import frc.robot.commands.DriveCommandXbox;
 import frc.robot.commands.DriveDistance;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.OdometryTargetError;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -33,6 +34,7 @@ public class RobotContainer {
   private final DriveSubsystem m_driveSubsystem;
   //private final DriveCommand m_driveCommand;
   private final DriveCommandXbox m_driveCommandXbox;
+  private final OdometryTargetError m_odometryTargetError;
 
   // controllers
   private final XboxController m_xbox = new XboxController(0);
@@ -68,10 +70,11 @@ public class RobotContainer {
 
     // subsystems
     m_driveSubsystem = new DriveSubsystem();
+    m_odometryTargetError = new OdometryTargetError(m_driveSubsystem);
 
     // commands
     //m_driveCommand = new DriveCommand(m_stick, m_driveSubsystem);
-    m_driveCommandXbox = new DriveCommandXbox(m_xbox, m_driveSubsystem);
+    m_driveCommandXbox = new DriveCommandXbox(m_xbox, m_driveSubsystem, m_odometryTargetError);
 
     // set default commands
     //m_driveSubsystem.setDefaultCommand(m_driveCommand);
