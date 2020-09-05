@@ -17,7 +17,6 @@ import frc.robot.commands.BumpDriveSpeed;
 import frc.robot.commands.BumpDrivekFF;
 import frc.robot.commands.BumpDrivekI;
 import frc.robot.commands.BumpDrivekP;
-import frc.robot.commands.DriveCommand;
 import frc.robot.commands.DriveCommandXbox;
 import frc.robot.commands.DriveDistance;
 import frc.robot.subsystems.DriveSubsystem;
@@ -50,7 +49,7 @@ public class RobotContainer {
   private final JoystickButton m_xboxX = new JoystickButton(m_xbox, 3);
   private final JoystickButton m_xboxY = new JoystickButton(m_xbox, 4);
   private final JoystickButton m_xboxLeftBumper = new JoystickButton(m_xbox, 5);
-  private final JoystickButton m_xboxRightBumper = new JoystickButton(m_xbox, 6);
+  private final JoystickButton m_xboxRightBumper = new JoystickButton(m_xbox, 6); // used for pointing at target
 
   private final JoystickButton m_button3 = new JoystickButton(m_stick, 3);
   private final JoystickButton m_button4 = new JoystickButton(m_stick, 4);
