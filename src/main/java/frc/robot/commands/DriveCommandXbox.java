@@ -63,7 +63,12 @@ public class DriveCommandXbox extends CommandBase {
     double rotation;
     if (m_xbox.getRawButton(6)) {
       double targetHeadingError = m_getTargetError.GetTargetHeadingError();
-      rotation = targetHeadingError * Constants.TARGET_kP;
+      if (speed == 0) {
+        m_driveSubsystem.setHeading(m_driveSubsystem.getFieldHeading() + targetHeadingError);
+        return;
+      } else {
+        rotation = targetHeadingError * Constants.TARGET_kP;
+      }
     } else {
       double rotMult = (stickTwist < 0.0) ? -1.0 : 1.0;
       stickTwist = Math.abs(stickTwist);

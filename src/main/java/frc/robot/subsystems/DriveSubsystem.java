@@ -215,6 +215,11 @@ public class DriveSubsystem extends SubsystemBase {
         return m_fieldHeading;
     }
 
+    //TODO
+    public void setHeading(double heading) {
+        
+    }
+
     @Override
     public void periodic() {
         // This method will be called once per scheduler run

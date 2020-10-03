@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Utl;
 
 public class OdometryTargetError extends SubsystemBase implements IGetTargetError{
 
@@ -23,12 +24,12 @@ public class OdometryTargetError extends SubsystemBase implements IGetTargetErro
   }
 
   public double GetTargetHeadingError() {
-    // TODO: make this loop
     double fieldX = m_driveSubsystem.getFieldX();
     double fieldY = m_driveSubsystem.getFieldY();
     double fieldHeading = m_driveSubsystem.getFieldHeading();
-    double angleToTarget = Math.atan2(m_targetX - fieldX, m_targetY - fieldY);
-    return angleToTarget - fieldHeading;
+    double angleToTargetFromZero = Math.atan2(m_targetX - fieldX, m_targetY - fieldY);
+    fieldHeading %= Utl.PI;
+    return angleToTargetFromZero - fieldHeading;
   }
 
   @Override
