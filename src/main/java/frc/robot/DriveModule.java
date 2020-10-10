@@ -59,6 +59,7 @@ public class DriveModule {
      * The last speed value that was set for this module, in the range 0.0 to 1.0.
      */
     private double m_lastSpeed = 0.0;
+    private boolean m_driveBySpeed = true;
 
     /**
      * * The factory that creates the DriveModule given the
@@ -144,10 +145,17 @@ public class DriveModule {
      * * constants for best control.
      */
     public void setDrivePID() {
-
         m_drivePID.setP(Constants.DRIVE_kP);
         m_drivePID.setI(Constants.DRIVE_kI);
         m_drivePID.setFF(Constants.DRIVE_kFF);
+        m_drivePID.setIZone(Constants.DRIVE_IZONE);
+    }
+
+    public void setDrivePosPID() {
+        m_drivePID.setP(Constants.DRIVE_POS_kP);
+        m_drivePID.setI(Constants.DRIVE_POS_kI);
+        m_drivePID.setFF(0.0);
+        m_drivePID.setIZone(0.0);
     }
 
     private void initPID(CANPIDController pid, double kFF, double kP, double kI, double kIZone) {
@@ -241,16 +249,8 @@ public class DriveModule {
     public void setDegreesAndSpeed(double targetDegrees, double speed) {
         setRadiansAndSpeed(Math.toRadians(targetDegrees), speed);
     }
-
-    /**
-     * Set the direction and speed of the drive wheel in this module.
-     *
-     * @param targetRadians (double) The direction from -pi to pi radians where 0.0 is towards the
-     *                      front of the robot, and positive is clockwise.
-     * @param speed         (double) The normalized speed of the wheel from 0.0 to 1.0 where 1.0 is the maximum
-     *                      forward velocity.
-     */
-    public void setRadiansAndSpeed(double targetRadians, double speed) {
+    
+    public void setRadians(double targetRadians) {
         // The real angle of the front of the wheel is 180 degrees away from the current angle if the wheel
         // is going backwards (i.e. the m_lastAngle was the last target angle
         double realLastForward = (m_speedMultiplier > 0.0) ? m_lastRadians :
@@ -283,11 +283,42 @@ public class DriveModule {
         // Compute and set the spin value
         m_lastRadians = targetRadians;
         m_lastEncoder += (deltaRadians * Constants.RADIANS_TO_SPIN_ENCODER);
+
         m_spinPID.setReference(m_lastEncoder, ControlType.kPosition);
+    }
+
+    /**
+     * Set the direction and speed of the drive wheel in this module.
+     *
+     * @param targetRadians (double) The direction from -pi to pi radians where 0.0 is towards the
+     *                      front of the robot, and positive is clockwise.
+     * @param speed         (double) The normalized speed of the wheel from 0.0 to 1.0 where 1.0 is the maximum
+     *                      forward velocity.
+     */
+    public void setRadiansAndSpeed(double targetRadians, double speed) {
+
+        setRadians(targetRadians);
 
         // Compute and set the speed value
         m_lastSpeed = speed;
         speed *= Constants.MAX_DRIVE_VELOCITY * m_speedMultiplier;
+
+        if (!m_driveBySpeed) {
+            setDrivePID();
+            m_driveBySpeed = true;
+        }
         m_drivePID.setReference(speed, ControlType.kVelocity);
+    }
+
+    public void setRadiansAndDistance(double targetRadians, double deltaTics) {
+        setRadians(targetRadians);
+        double targetTics = getDriveEncoderPosition() + deltaTics * m_speedMultiplier;
+
+        if (m_driveBySpeed) {
+            m_drivePID.setReference(0, ControlType.kVelocity);
+            setDrivePosPID();
+            m_driveBySpeed = false;
+        }
+        m_drivePID.setReference(targetTics, ControlType.kPosition);
     }
 }

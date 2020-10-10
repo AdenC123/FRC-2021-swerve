@@ -77,6 +77,11 @@ public final class Constants {
     public static double DRIVE_kFF = 0.000174;
     public static double DRIVE_IZONE = 200.0;
 
+    public static double DRIVE_POS_kP = 0.13;
+    public static double DRIVE_POS_kI = 0.0;
+
+    public static double DRIVE_POS_TICS_PER_RADIAN = 10.385;
+
     // used in DriveCommand
     public static double DRIVE_DEADBAND = 0.1;
     public static double DRIVE_SPEED_SENSITIVITY = 2.0;

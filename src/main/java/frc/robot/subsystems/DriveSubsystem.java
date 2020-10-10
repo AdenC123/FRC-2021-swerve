@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.DriveModule;
@@ -216,8 +217,18 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     //TODO
-    public void setHeading(double heading) {
+    public void setHeading(double targetHeading) {
+        m_RF_lastRadians = Math.atan2(Constants.DRIVE_LENGTH, -Constants.DRIVE_WIDTH);
+        m_LF_lastRadians = Math.atan2(Constants.DRIVE_LENGTH, Constants.DRIVE_WIDTH);
+        m_LR_lastRadians = Math.atan2(-Constants.DRIVE_LENGTH, Constants.DRIVE_WIDTH);
+        m_RR_lastRadians = Math.atan2(-Constants.DRIVE_LENGTH, -Constants.DRIVE_WIDTH);
         
+        double deltaTics = (targetHeading - m_navx.getHeading()) * Constants.DRIVE_POS_TICS_PER_RADIAN;
+
+        m_rf.setRadiansAndDistance(m_RF_lastRadians, deltaTics);
+        m_lf.setRadiansAndDistance(m_LF_lastRadians, deltaTics);
+        m_lr.setRadiansAndDistance(m_LR_lastRadians, deltaTics);
+        m_rr.setRadiansAndDistance(m_RR_lastRadians, deltaTics);
     }
 
     @Override
