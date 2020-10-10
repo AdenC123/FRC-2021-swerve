@@ -82,7 +82,7 @@ public final class Constants {
 
     public static double DRIVE_POS_TICS_PER_RADIAN = 10.385;
 
-    // used in DriveCommand
+    // used in DriveCommandd
     public static double DRIVE_DEADBAND = 0.1;
     public static double DRIVE_SPEED_SENSITIVITY = 2.0;
     public static double DRIVE_SPEED_GAIN = 0.5;
