@@ -216,7 +216,6 @@ public class DriveSubsystem extends SubsystemBase {
         return m_fieldHeading;
     }
 
-    //TODO
     public void setHeading(double targetHeading) {
         m_RF_lastRadians = Math.atan2(Constants.DRIVE_LENGTH, -Constants.DRIVE_WIDTH);
         m_LF_lastRadians = Math.atan2(Constants.DRIVE_LENGTH, Constants.DRIVE_WIDTH);
@@ -229,6 +228,9 @@ public class DriveSubsystem extends SubsystemBase {
         m_lf.setRadiansAndDistance(m_LF_lastRadians, deltaTics);
         m_lr.setRadiansAndDistance(m_LR_lastRadians, deltaTics);
         m_rr.setRadiansAndDistance(m_RR_lastRadians, deltaTics);
+
+        m_thisChassisForward = 0.0;
+        m_thisChassisStrafe = 0.0;
     }
 
     @Override
