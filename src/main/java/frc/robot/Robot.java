@@ -22,8 +22,20 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+
+  private NavX m_navx;
   
   // Telemetry variables
+  private double m_lastPort0 = 1000.0;
+  private double m_lastPort1 = -1.0;
+  private double m_lastPort2 = -1.0;
+  private double m_lastPort3 = -1.0;
+  private double m_lastPort4 = -1.0;
+  private double m_lastPort5 = -1.0;
+  private double m_lastPort6 = -1.0;
+  private double m_lastPort7 = -1.0;
+  private double m_lastPort8 = -1.0;
+  private double m_lastPort9 = -1.0;
 
   /**
    * Update telemetry feedback for a real number value. If the value has not changed, no update is sent
@@ -37,7 +49,7 @@ public class Robot extends TimedRobot {
   @SuppressWarnings("unused")
   private double dashboardTelemetry(int port, String key, double var, double lastValue) {
     if (var != lastValue) {
-      SmartDashboard.putString(String.format("DB/String %d", port), String.format("%s: %4.3f", key, var));
+      SmartDashboard.putString(String.format("DB/String %d", port), String.format("%s: %10.6f", key, var));
     }
     return var;
   }
@@ -94,7 +106,16 @@ public class Robot extends TimedRobot {
     return var;
   }
 
-  private void displayTelemetry() {
+  private void displayTelemetry() { 
+    m_lastPort0 = dashboardTelemetry(0, "Heading", m_navx.getHeadingInfo().heading, m_lastPort0);
+    // m_lastPort1 = 
+    // m_lastPort2 = 
+    // m_lastPort3 = 
+    // m_lastPort4 = 
+    m_lastPort5 = dashboardTelemetry(5, "Field X", m_robotContainer.getDriveSubsystem().getFieldX(), m_lastPort5);
+    m_lastPort6 = dashboardTelemetry(6, "Field Y", m_robotContainer.getDriveSubsystem().getFieldY(), m_lastPort6);
+    // m_lastPort7 = 
+    // m_lastPort8 = 
   }
 
   /**
@@ -112,6 +133,9 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    m_navx = NavX.getInstance();
+    m_navx.initializeHeadingAndNav();
   }
 
   /**
