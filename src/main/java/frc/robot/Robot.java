@@ -108,14 +108,14 @@ public class Robot extends TimedRobot {
 
   private void displayTelemetry() { 
     m_lastPort0 = dashboardTelemetry(0, "Heading", m_navx.getHeadingInfo().heading, m_lastPort0);
-    m_lastPort1 = dashboardTelemetry(1, "LF Pos", m_robotContainer.getDriveSubsystem().getLFModule().getDriveEncoderPosition(), m_lastPort1);
-    m_lastPort2 = dashboardTelemetry(2, "LR Pos", m_robotContainer.getDriveSubsystem().getLRModule().getDriveEncoderPosition(), m_lastPort2);
-    m_lastPort3 = dashboardTelemetry(3, "RR Pos", m_robotContainer.getDriveSubsystem().getRRModule().getDriveEncoderPosition(), m_lastPort3);
-    m_lastPort4 = dashboardTelemetry(4, "Speed", Constants.DRIVE_SPEED, m_lastPort4);
+    // m_lastPort1 = 
+    // m_lastPort2 = 
+    // m_lastPort3 = 
+    // m_lastPort4 = 
     m_lastPort5 = dashboardTelemetry(5, "Field X", m_robotContainer.getDriveSubsystem().getFieldX(), m_lastPort5);
     m_lastPort6 = dashboardTelemetry(6, "Field Y", m_robotContainer.getDriveSubsystem().getFieldY(), m_lastPort6);
-    m_lastPort7 = dashboardTelemetry(7, "Field Heading", m_robotContainer.getDriveSubsystem().getFieldHeading(), m_lastPort7);
-    m_lastPort8 = dashboardTelemetry(8, "RF Pos", m_robotContainer.getDriveSubsystem().getRFModule().getDriveEncoderPosition(), m_lastPort8);
+    // m_lastPort7 = 
+    // m_lastPort8 = 
   }
 
   /**

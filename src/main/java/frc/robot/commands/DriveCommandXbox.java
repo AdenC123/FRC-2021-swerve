@@ -61,7 +61,7 @@ public class DriveCommandXbox extends CommandBase {
 
     // either do rotation with right stick, or PID to target
     double rotation;
-    if (m_xbox.getRawButton(6)) {
+    if (m_xbox.getRawButton(5)) {
       double targetHeadingError = m_getTargetError.GetTargetHeadingError();
       if (speed == 0) {
         m_driveSubsystem.setHeading(m_driveSubsystem.getFieldHeading() + targetHeadingError);
