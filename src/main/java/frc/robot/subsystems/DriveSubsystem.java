@@ -100,7 +100,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @param strafe   Strafe right. From -1 to 1.
      * @param rotation Clockwise rotation. From -1 to 1.
      */
-    private void swerveDriveComponents(double forward, double strafe,
+    public void swerveDriveComponents(double forward, double strafe,
                                        double rotation) {
 
         // calculate a, b, c and d variables

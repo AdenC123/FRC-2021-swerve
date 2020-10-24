@@ -1,0 +1,56 @@
+{
+    "description": "No description provided.",
+    "title": "untitled",
+    "controlPoints": [
+        {
+            "field_dX": -0.04621359223300931,
+            "fieldY": 0.016504854368930566,
+            "field_dY": 0.7163106796116512,
+            "fieldX": -0.016504854368930566,
+            "fieldHeading": 0.0,
+            "time": 0.0,
+            "field_dHeading": 0.0,
+            "derivativesEdited": false
+        },
+        {
+            "field_dX": 0.71631067961165,
+            "fieldY": 1.039805825242718,
+            "field_dY": 0.8318446601941751,
+            "fieldX": -0.08252427184465816,
+            "fieldHeading": 0.0,
+            "time": 1.0,
+            "field_dHeading": 0.0,
+            "derivativesEdited": false
+        },
+        {
+            "field_dX": 0.7625242718446592,
+            "fieldY": 1.204854368932038,
+            "field_dY": -0.6469902912621366,
+            "fieldX": 1.0067961165048551,
+            "fieldHeading": 0.0,
+            "time": 2.0,
+            "field_dHeading": 0.0,
+            "derivativesEdited": false
+        },
+        {
+            "field_dX": -0.7394174757281552,
+            "fieldY": 0.11553398058252284,
+            "field_dY": -0.7856310679611646,
+            "fieldX": 1.0067961165048551,
+            "fieldHeading": 0.0,
+            "time": 3.0,
+            "field_dHeading": 0.0,
+            "derivativesEdited": false
+        },
+        {
+            "field_dX": -0.7394174757281552,
+            "fieldY": 0.08252427184465994,
+            "field_dY": -0.023106796116504034,
+            "fieldX": -0.04951456310679525,
+            "fieldHeading": 0.0,
+            "time": 4.0,
+            "field_dHeading": 0.0,
+            "derivativesEdited": false
+        }
+    ]
+}

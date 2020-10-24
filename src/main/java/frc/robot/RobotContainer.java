@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.DriveCommandXbox;
+import frc.robot.commands.FollowPathCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.OdometryTargetError;
 
@@ -85,7 +86,7 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    
+    m_xboxA.whenPressed(new FollowPathCommand("./resources/one_meter_circle_path.json", m_driveSubsystem));
   }
 
 
