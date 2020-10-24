@@ -1,0 +1,96 @@
+{
+    "description": "No description provided.",
+    "title": "untitled",
+    "controlPoints": [
+        {
+            "field_dX": -1.8185126673177496,
+            "fieldY": 0.016504854368930566,
+            "field_dY": 0.11787786522663524,
+            "fieldX": 0.01650485436893412,
+            "fieldHeading": 0.0536320148689951,
+            "time": 0.0,
+            "field_dHeading": 0.9965812715371186,
+            "derivativesEdited": true
+        },
+        {
+            "field_dX": -0.10837292468547322,
+            "fieldY": 0.5784023668639051,
+            "field_dY": 0.8862276670305057,
+            "fieldX": -0.6161242603550292,
+            "fieldHeading": 1.4773195456363075,
+            "time": 1.0,
+            "field_dHeading": 2.1615724471045583,
+            "derivativesEdited": false
+        },
+        {
+            "field_dX": 0.8273668639053259,
+            "fieldY": 1.2825443786982245,
+            "field_dY": 1.0034023668639052,
+            "fieldX": -0.1383136094674562,
+            "fieldHeading": 3.141592653589793,
+            "time": 2.0,
+            "field_dHeading": 2.293698409692879,
+            "derivativesEdited": false
+        },
+        {
+            "field_dX": 0.07041420118343246,
+            "fieldY": 2.011834319526627,
+            "field_dY": 0.9505917159763314,
+            "fieldX": 0.5658284023668649,
+            "fieldHeading": 4.754031559483278,
+            "time": 3.0,
+            "field_dHeading": 0.025443334713313615,
+            "derivativesEdited": false
+        },
+        {
+            "field_dX": -0.8801775147929002,
+            "fieldY": 2.640532544378698,
+            "field_dY": -0.052810650887573723,
+            "fieldX": -0.03772189349112409,
+            "fieldHeading": 3.1779402746088126,
+            "time": 4.0,
+            "field_dHeading": -2.2615728351757554,
+            "derivativesEdited": false
+        },
+        {
+            "field_dX": 0.05029585798816605,
+            "fieldY": 1.9363905325443787,
+            "field_dY": -1.6094674556213011,
+            "fieldX": -0.6915680473372783,
+            "fieldHeading": 1.5232132235179128,
+            "time": 5.0,
+            "field_dHeading": -2.224558192226169,
+            "derivativesEdited": true
+        },
+        {
+            "field_dX": 0.9153846153846151,
+            "fieldY": 1.2573964497041423,
+            "field_dY": -0.8977810650887571,
+            "fieldX": 0.11316568047337228,
+            "fieldHeading": 0.0,
+            "time": 6.0,
+            "field_dHeading": -2.2355747419627807,
+            "derivativesEdited": false
+        },
+        {
+            "field_dX": -0.052810650887573723,
+            "fieldY": 0.6538461538461542,
+            "field_dY": -0.8449704142011834,
+            "fieldX": 0.6161242603550292,
+            "fieldHeading": -1.6704649792860597,
+            "time": 7.0,
+            "field_dHeading": -0.01841680207704502,
+            "derivativesEdited": false
+        },
+        {
+            "field_dX": -2.263313609467456,
+            "fieldY": 0.05029585798816605,
+            "field_dY": -0.2011834319526642,
+            "fieldX": 0.03772189349112409,
+            "fieldHeading": -0.026309717252921458,
+            "time": 8.0,
+            "field_dHeading": 1.1509086834231967,
+            "derivativesEdited": true
+        }
+    ]
+}

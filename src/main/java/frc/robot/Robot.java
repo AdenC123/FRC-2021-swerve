@@ -109,8 +109,8 @@ public class Robot extends TimedRobot {
 
   private void displayTelemetry() { 
     m_lastPort0 = dashboardTelemetry(0, "Heading", m_navx.getHeadingInfo().heading, m_lastPort0);
-    m_lastPort1 = dashboardTelemetry(1, "Launch", Filesystem.getLaunchDirectory().toString(), m_lastPort1);
-    m_lastPort2 = dashboardTelemetry(2, "Operating", Filesystem.getOperatingDirectory().toString(), m_lastPort2);
+    // m_lastPort1 =
+    // m_lastPort2 =
     // m_lastPort3 = 
     // m_lastPort4 = 
     m_lastPort5 = dashboardTelemetry(5, "Field X", m_robotContainer.getDriveSubsystem().getFieldX(), m_lastPort5);
