@@ -111,7 +111,7 @@ public class Robot extends TimedRobot {
     m_lastPort1 = dashboardTelemetry(1, "X", m_robotContainer.getLimelightSubsystem().getX(), m_lastPort1);
     m_lastPort2 = dashboardTelemetry(2, "Y", m_robotContainer.getLimelightSubsystem().getY(), m_lastPort2);
     m_lastPort3 = dashboardTelemetry(3, "Area", m_robotContainer.getLimelightSubsystem().getA(), m_lastPort3);
-    // m_lastPort4 = 
+    m_lastPort4 = dashboardTelemetry(4, "Distance", m_robotContainer.getLimelightSubsystem().distanceToTarget(), m_lastPort4);
     m_lastPort5 = dashboardTelemetry(5, "Field X", m_robotContainer.getDriveSubsystem().getFieldX(), m_lastPort5);
     m_lastPort6 = dashboardTelemetry(6, "Field Y", m_robotContainer.getDriveSubsystem().getFieldY(), m_lastPort6);
     // m_lastPort7 = 

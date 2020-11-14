@@ -36,8 +36,8 @@ public class LimelightSubsystem extends SubsystemBase implements IGetTargetError
     NetworkTableEntry tx = table.getEntry("tx");
     NetworkTableEntry ty = table.getEntry("ty");
     NetworkTableEntry ta = table.getEntry("ta");
-    m_x = tx.getDouble(0.0);
-    m_y = ty.getDouble(0.0);
+    m_x = tx.getDouble(0.0) * (Utl.PI/180);
+    m_y = ty.getDouble(0.0) * (Utl.PI/180);
     m_a = ta.getDouble(0.0);
   }
 
@@ -64,6 +64,11 @@ public class LimelightSubsystem extends SubsystemBase implements IGetTargetError
     }
   }
 
+  public double distanceToTarget() {
+    return (Constants.TARGET_HEIGHT_IN - Constants.LIMELIGHT_HEIGHT_IN) / Math.tan(Constants.LIMELIGHT_ANGLE_RAD + m_y);
+    
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -71,6 +76,6 @@ public class LimelightSubsystem extends SubsystemBase implements IGetTargetError
   }
 
   public double GetTargetHeadingError() {
-    return m_x * (Utl.PI/180);
+    return m_x;
   }
 }

@@ -104,4 +104,9 @@ public final class Constants {
     public static final int PIPELINE_COLLECTION = 0;
     public static final int PIPELINE_DRIVER = 1;
     public static final int PIPELINE_SHOOTER = 2;
+
+    // Limelight angles and heights (use better units dumabss)
+    public static double LIMELIGHT_ANGLE_RAD = -0.11;
+    public static double TARGET_HEIGHT_IN = 14.1;
+    public static double LIMELIGHT_HEIGHT_IN = 6.6;
 }
