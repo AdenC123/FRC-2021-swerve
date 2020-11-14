@@ -8,7 +8,11 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Utl;
+
+import com.fasterxml.jackson.databind.deser.impl.SetterlessProperty;
+
 import edu.wpi.first.networktables.NetworkTable; 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -23,10 +27,11 @@ public class LimelightSubsystem extends SubsystemBase implements IGetTargetError
    * Creates a new LimelightSubsystem.
    */
   public LimelightSubsystem() {
-      updateData();
+      updateVisionData();
+      setPipeline(Constants.PIPELINE_COLLECTION);
   }
 
-  private void updateData() {
+  private void updateVisionData() {
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
     NetworkTableEntry tx = table.getEntry("tx");
     NetworkTableEntry ty = table.getEntry("ty");
@@ -48,10 +53,21 @@ public class LimelightSubsystem extends SubsystemBase implements IGetTargetError
       return m_a;
   }
 
+  public void setPipeline(int pipeline) {
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    table.getEntry("pipeline").setNumber(pipeline);
+    // Disable vision for driver camera, otherwise do vision
+    if (pipeline == Constants.PIPELINE_DRIVER) {
+      table.getEntry("camMode").setNumber(1);
+    } else {
+      table.getEntry("camMode").setNumber(0);
+    }
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    updateData();
+    updateVisionData();
   }
 
   public double GetTargetHeadingError() {

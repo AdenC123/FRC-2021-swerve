@@ -14,21 +14,23 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.DriveCommandXbox;
+import frc.robot.commands.SetLimelightPipeline;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.OdometryTargetError;
 
 /**
- * This class is where the bulk of the robot should be declared.  Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
- * (including subsystems, commands, and button mappings) should be declared here.
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a "declarative" paradigm, very little robot logic should
+ * actually be handled in the {@link Robot} periodic methods (other than the
+ * scheduler calls). Instead, the structure of the robot (including subsystems,
+ * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
 
   private final DriveSubsystem m_driveSubsystem;
   private final LimelightSubsystem m_limelightSubsystem;
-  //private final DriveCommand m_driveCommand;
+  // private final DriveCommand m_driveCommand;
   private final DriveCommandXbox m_driveCommandXbox;
   private final OdometryTargetError m_odometryTargetError;
 
@@ -60,7 +62,7 @@ public class RobotContainer {
   private final JoystickButton m_button12 = new JoystickButton(this.m_stick, 12);
 
   /**
-   * The container for the robot.  Contains subsystems, OI devices, and commands.
+   * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
 
@@ -70,11 +72,11 @@ public class RobotContainer {
     m_limelightSubsystem = new LimelightSubsystem();
 
     // commands
-    //m_driveCommand = new DriveCommand(m_stick, m_driveSubsystem);
+    // m_driveCommand = new DriveCommand(m_stick, m_driveSubsystem);
     m_driveCommandXbox = new DriveCommandXbox(m_xbox, m_driveSubsystem, m_limelightSubsystem);
 
     // set default commands
-    //m_driveSubsystem.setDefaultCommand(m_driveCommand);
+    // m_driveSubsystem.setDefaultCommand(m_driveCommand);
     m_driveSubsystem.setDefaultCommand(m_driveCommandXbox);
 
     // Configure the button bindings
@@ -88,7 +90,8 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    
+    m_xboxA.whenPressed(new SetLimelightPipeline(m_limelightSubsystem, Constants.PIPELINE_DRIVER));
+    m_xboxB.whenPressed(new SetLimelightPipeline(m_limelightSubsystem, Constants.PIPELINE_COLLECTION));
   }
 
 

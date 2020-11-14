@@ -99,4 +99,9 @@ public final class Constants {
 
     // PID values for rotation to target
     public static double TARGET_kP = 0.5;
+
+    // Limelight pipeline number
+    public static final int PIPELINE_COLLECTION = 0;
+    public static final int PIPELINE_DRIVER = 1;
+    public static final int PIPELINE_SHOOTER = 2;
 }
