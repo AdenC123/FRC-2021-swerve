@@ -28,8 +28,8 @@ public class Robot extends TimedRobot {
   
   // Telemetry variables
   private double m_lastPort0 = 1000.0;
-  private String m_lastPort1 = null;
-  private String m_lastPort2 = null;
+  private int m_lastPort1 = -1;
+  private int m_lastPort2 = -1;
   private double m_lastPort3 = -1.0;
   private double m_lastPort4 = -1.0;
   private double m_lastPort5 = -1.0;
@@ -109,8 +109,8 @@ public class Robot extends TimedRobot {
 
   private void displayTelemetry() { 
     m_lastPort0 = dashboardTelemetry(0, "Heading", m_navx.getHeadingInfo().heading, m_lastPort0);
-    // m_lastPort1 =
-    // m_lastPort2 =
+    m_lastPort1 = dashboardTelemetry(1, "Driver", m_robotContainer.readDriverID(), m_lastPort1);
+    m_lastPort2 = dashboardTelemetry(2, "Auto", m_robotContainer.readAutoID(), m_lastPort2);
     // m_lastPort3 = 
     // m_lastPort4 = 
     m_lastPort5 = dashboardTelemetry(5, "Field X", m_robotContainer.getDriveSubsystem().getFieldX(), m_lastPort5);
@@ -134,6 +134,8 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    // Read driver and auto from switchboard
 
     m_navx = NavX.getInstance();
     m_navx.initializeHeadingAndNav();

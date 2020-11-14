@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -59,6 +60,13 @@ public class RobotContainer {
   private final JoystickButton m_button11 = new JoystickButton(this.m_stick, 11);
   private final JoystickButton m_button12 = new JoystickButton(this.m_stick, 12);
 
+  // Digital input switchboard
+  private DigitalInput switch0 = new DigitalInput(0);
+  private DigitalInput switch1 = new DigitalInput(1);
+  private DigitalInput switch2 = new DigitalInput(2);
+  private DigitalInput switch3 = new DigitalInput(3);
+  private DigitalInput switch4 = new DigitalInput(4);
+
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
@@ -87,7 +95,7 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    m_xboxA.whenPressed(new FollowPathCommand(Filesystem.getDeployDirectory().toString() + "/figure_eight_path.json", m_driveSubsystem));
+    // m_xboxA.whenPressed(new FollowPathCommand(Filesystem.getDeployDirectory().toString() + "/figure_eight_path.json", m_driveSubsystem));
   }
 
 
@@ -99,6 +107,14 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
     return null;
+  }
+
+  public int readDriverID() {
+    return (switch0.get() ? 0 : 1) + (switch1.get() ? 0 : 2);
+  }
+
+  public int readAutoID() {
+    return (switch2.get() ? 0 : 1) + (switch3.get() ? 0 : 2) + (switch4.get() ? 0 : 4);
   }
 
   public XboxController getXbox() {
