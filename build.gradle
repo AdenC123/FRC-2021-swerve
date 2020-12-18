@@ -43,6 +43,7 @@ def includeDesktopSupport = false
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 4.
 dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'org.jetbrains:annotations:17.0.0'
     compile 'com.googlecode.json-simple:json-simple:1.1.1'
 

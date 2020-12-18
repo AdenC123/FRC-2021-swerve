@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.AnalogPotentiometer;
 
 import javax.annotation.Nonnull;
 
-import static frc.robot.Utl.*;
+import static org.a05annex.util.Utl.*;
 
 
 /**
@@ -310,6 +310,11 @@ public class DriveModule {
         m_drivePID.setReference(speed, ControlType.kVelocity);
     }
 
+    /**
+     *
+     * @param targetRadians
+     * @param deltaTics
+     */
     public void setRadiansAndDistance(double targetRadians, double deltaTics) {
         setRadians(targetRadians);
         double targetTics = getDriveEncoderPosition() + deltaTics * m_speedMultiplier;

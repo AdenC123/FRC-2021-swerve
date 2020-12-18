@@ -7,7 +7,8 @@
 
 package frc.robot;
 
-import static frc.robot.Utl.TWO_PI;
+import org.a05annex.util.Utl;
+import static org.a05annex.util.Utl.TWO_PI;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -68,21 +69,24 @@ public final class Constants {
     public static final double MAX_METERS_PER_SEC = 3.1951;
     public static final double MAX_RADIANS_PER_SEC = MAX_METERS_PER_SEC / DRIVE_RADIUS;
 
-    // PID values
+    // PID values for the spin spark motor controller PID loop
     public static double SPIN_kP = 0.25;
     public static double SPIN_kI = 0.0;
 
+    // PID values for the drive spark motor controller speed PID loop
     public static double DRIVE_kP = 0.00003;
     public static double DRIVE_kI = 0.000002;
     public static double DRIVE_kFF = 0.000174;
     public static double DRIVE_IZONE = 200.0;
 
+    // PID values for the drive spark motor controller position PID loop
     public static double DRIVE_POS_kP = 0.13;
     public static double DRIVE_POS_kI = 0.0;
 
+    // drive encoder tics per radian of robot rotation when rotation is controlled by position rather than speed.
     public static double DRIVE_POS_TICS_PER_RADIAN = 10.385;
 
-    // used in DriveCommandd
+    // used in DriveCommand
     public static double DRIVE_DEADBAND = 0.1;
     public static double DRIVE_SPEED_SENSITIVITY = 2.0;
     public static double DRIVE_SPEED_GAIN = 0.5;
@@ -97,6 +101,7 @@ public final class Constants {
     // temp variable used in DriveDistance
     public static double DRIVE_SPEED = 0.0;
 
-    // PID values for rotation to target
+    // PID values for rotation to target using a PID on current heading and target direction to keep ths robot
+    // oriented to the target while driving.
     public static double TARGET_kP = 0.5;
 }
