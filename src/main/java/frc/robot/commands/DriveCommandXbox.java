@@ -62,6 +62,8 @@ public class DriveCommandXbox extends CommandBase {
     // either do rotation with right stick, or PID to target
     double rotation;
     if (m_xbox.getRawButton(5)) {
+      // OK, the driver says key on the target, so we ignore the stick twist and use the
+      // targeting heading to control the rotation.
       double targetHeadingError = m_getTargetError.GetTargetHeadingError();
       if (speed == 0) {
         m_driveSubsystem.setHeading(m_driveSubsystem.getFieldHeading() + targetHeadingError);
@@ -70,12 +72,18 @@ public class DriveCommandXbox extends CommandBase {
         rotation = targetHeadingError * Constants.TARGET_kP;
       }
     } else {
+      // Use the stick forward, strafe, twist as specified by the driver. NOTE: if the driver does
+      // not specify a twist, then this command should be applying a rotation correction to maintain
+      // the current heading.
       double rotMult = (stickTwist < 0.0) ? -1.0 : 1.0;
       stickTwist = Math.abs(stickTwist);
       // do deadband on rotation
       if (stickTwist < Constants.TWIST_DEADBAND) {
+        // TODO - OK, no twist is specified - we should be trying to maintain the expected heading
         rotation = 0.0;
       } else {
+        // TODO - OK, twist is specified, we should be updating the expected heading to match the
+        // TODO - current robot heading.
         rotation = (stickTwist - Constants.TWIST_DEADBAND) / (1.0 - Constants.TWIST_DEADBAND);
       }
       // add sensitivity, gain and sign
@@ -84,7 +92,6 @@ public class DriveCommandXbox extends CommandBase {
     // find direction, if the speed is 0 then it won't rotate
     double direction = Math.atan2(stickX, stickY);
     m_driveSubsystem.swerveDriveFieldRelative(direction, speed, rotation);
-    
   }
 
   // Called once the command ends or is interrupted.

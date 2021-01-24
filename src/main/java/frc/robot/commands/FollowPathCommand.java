@@ -50,6 +50,10 @@ public class FollowPathCommand extends CommandBase {
       m_isFinished = true;
       m_driveSubsystem.swerveDriveComponents(0, 0, 0);
     } else {
+      // TODO - The expected heading is included in the PathPoint. The path point is the instantaneous
+      // TODO - speed and position that we want to be at NOW. If the heading is incorrect, then the
+      // TODO - direction the forward and strafe is incorrect and we will be at the wrong place on
+      // TODO - the field. So we need a PID correction of heading incorporated here.
       double forward = point.speedForward / Constants.MAX_METERS_PER_SEC;
       double strafe = point.speedStrafe / Constants.MAX_METERS_PER_SEC;
       double rotation = point.speedRotation / Constants.MAX_RADIANS_PER_SEC;
