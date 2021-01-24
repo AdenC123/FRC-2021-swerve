@@ -55,8 +55,8 @@ public final class Constants {
     public static final double MAX_DRIVE_VELOCITY = 5000;
 
     // length and width from center of the wheels, in m
-    public static final double DRIVE_LENGTH = 0.574;
-    public static final double DRIVE_WIDTH = 0.577;
+    public static final double DRIVE_LENGTH = 0.590;
+    public static final double DRIVE_WIDTH = 0.590;
     public static final double DRIVE_DIAGONAL = Utl.length(DRIVE_LENGTH, DRIVE_WIDTH);
     public static final double DRIVE_RADIUS = DRIVE_DIAGONAL / 2.0;
     // 18 motor revolutions to 1 spin of the drive wheel
