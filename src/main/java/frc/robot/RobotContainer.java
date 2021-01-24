@@ -38,7 +38,7 @@ public class RobotContainer {
   private final DriveSubsystem m_driveSubsystem;
   //private final SwerveTest m_swerveTest;
   //private final SpinTest m_spinTest;
-  //private final DriveTest m_driveTest;
+  private final DriveTest m_driveTest;
   private final SetSpeed m_setSpeed;
 
   public static DriveModule m_activeModule;
@@ -81,11 +81,11 @@ public class RobotContainer {
     // commands
     //m_swerveTest = new SwerveTest(m_xbox, m_driveSubsystem);
     //m_spinTest = new SpinTest(m_stick, m_driveSubsystem);
-    //m_driveTest = new DriveTest(m_stick, m_driveSubsystem);
+    m_driveTest = new DriveTest(m_stick, m_driveSubsystem);
     m_setSpeed = new SetSpeed(m_driveSubsystem);
 
     // set default commands
-    m_driveSubsystem.setDefaultCommand(m_setSpeed);
+    m_driveSubsystem.setDefaultCommand(m_driveTest);
 
     // Configure the button bindings
     configureButtonBindings();
