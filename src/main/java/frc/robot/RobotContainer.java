@@ -15,8 +15,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.robot.commands.DriveCommandXbox;
-import frc.robot.commands.FollowPathCommand;
+import frc.robot.commands.*;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.OdometryTargetError;
 
@@ -95,7 +94,17 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // m_xboxA.whenPressed(new FollowPathCommand(Filesystem.getDeployDirectory().toString() + "/figure_eight_path.json", m_driveSubsystem));
+    m_button3.whenPressed(new BumpDriveSensitivity(-0.1));
+    m_button5.whenPressed(new BumpDriveSensitivity(0.1));
+
+    m_button4.whenPressed(new BumpTwistSensitivity(-0.1));
+    m_button6.whenPressed(new BumpTwistSensitivity(0.1));
+
+    m_button11.whenPressed(new BumpDriveGain(-0.1));
+    m_button9.whenPressed(new BumpDriveGain(0.1));
+
+    m_button12.whenPressed(new BumpTwistGain(-0.1));
+    m_button10.whenPressed(new BumpTwistGain(0.1));
   }
 
 
