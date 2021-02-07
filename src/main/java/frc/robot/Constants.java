@@ -30,7 +30,15 @@ public final class Constants {
             LR_DRIVE = 5,
             LR_SPIN = 6,
             LF_DRIVE = 7,
-            LF_SPIN = 8;
+            LF_SPIN = 8,
+            SWEEPER = 9,
+            SHOOTER_LOWER = 12,
+            SHOOTER_UPPER = 16;
+    }
+
+    public static final class Pneumatics {
+        public static final int
+            SHOOTER = 3;
     }
 
     public static final class AnalogPorts {
@@ -43,9 +51,9 @@ public final class Constants {
 
     public static final class CalibrationOffset {
         public static final double
-            RF = 0.911,
-            RR = 0.982,
-            LR = 0.771,
+            RF = 0.916,
+            RR = 0.980,
+            LR = 0.774,
             LF = 0.853;
     }
 
