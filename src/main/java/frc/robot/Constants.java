@@ -112,4 +112,7 @@ public final class Constants {
     // PID values for rotation to target using a PID on current heading and target direction to keep ths robot
     // oriented to the target while driving.
     public static double TARGET_kP = 0.5;
+
+    // Amount of time in 20ms ticks to lift up the pneumatics when running ShootCommand
+    public static int SHOOT_TICKS = 15;
 }

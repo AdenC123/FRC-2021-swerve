@@ -19,8 +19,11 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.DriveCommandXbox;
 import frc.robot.commands.FollowPathCommand;
+import frc.robot.commands.RunShooter;
+import frc.robot.commands.ShootCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.OdometryTargetError;
+import frc.robot.subsystems.ShooterPneumaticSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 /**
@@ -35,6 +38,7 @@ public class RobotContainer {
   private final DriveCommandXbox m_driveCommandXbox;
   private final OdometryTargetError m_odometryTargetError;
   private final ShooterSubsystem m_shooterSubsystem;
+  private final ShooterPneumaticSubsystem m_shooterPneumaticSubsystem;
 
   // controllers
   private final XboxController m_xbox = new XboxController(0);
@@ -79,6 +83,7 @@ public class RobotContainer {
     m_driveSubsystem = new DriveSubsystem();
     m_odometryTargetError = new OdometryTargetError(m_driveSubsystem);
     m_shooterSubsystem = ShooterSubsystem.getInstance();
+    m_shooterPneumaticSubsystem = ShooterPneumaticSubsystem.getInstance();
 
     // commands
     //m_driveCommand = new DriveCommand(m_stick, m_driveSubsystem);
@@ -100,9 +105,10 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // m_xboxA.whenPressed(new FollowPathCommand(Filesystem.getDeployDirectory().toString() + "/figure_eight_path.json", m_driveSubsystem));
-    m_xboxA.whenPressed(new InstantCommand(m_shooterSubsystem::liftShooter, m_shooterSubsystem));
-    m_xboxB.whenPressed(new InstantCommand(m_shooterSubsystem::dropShooter, m_shooterSubsystem));
-    m_xboxY.whenHeld(new RunCommand(m_shooterSubsystem::shoot, m_shooterSubsystem));
+//    m_xboxA.whenPressed(new InstantCommand(m_shooterPneumaticSubsystem::liftShooter, m_shooterSubsystem));
+//    m_xboxB.whenPressed(new InstantCommand(m_shooterPneumaticSubsystem::dropShooter, m_shooterSubsystem));
+    m_xboxA.whenPressed(new ShootCommand(m_shooterPneumaticSubsystem));
+    m_xboxRightBumper.whenHeld(new RunShooter(m_shooterSubsystem, -1.0));
   }
 
 

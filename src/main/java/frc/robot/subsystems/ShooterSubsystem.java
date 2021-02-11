@@ -44,7 +44,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private final TalonSRX m_lowerShooter = new TalonSRX(Constants.MotorControllers.SHOOTER_LOWER);
     private final TalonSRX m_upperShooter = new TalonSRX(Constants.MotorControllers.SHOOTER_UPPER);
-    private final Solenoid m_shooterSolenoid = new Solenoid(Constants.Pneumatics.SHOOTER);
 
     /**
      * Creates a new instance of this ShooterSubsystem. This constructor
@@ -52,7 +51,6 @@ public class ShooterSubsystem extends SubsystemBase {
      * the {@link #getInstance()} method to get the singleton instance.
      */
     private ShooterSubsystem() {
-        m_shooterSolenoid.set(false);
         m_lowerShooter.configFactoryDefault();
         m_lowerShooter.setNeutralMode(NeutralMode.Coast);
         m_upperShooter.configFactoryDefault();
@@ -67,22 +65,8 @@ public class ShooterSubsystem extends SubsystemBase {
         m_upperShooter.set(ControlMode.PercentOutput, power);
     }
 
-    public void liftShooter() {
-        m_shooterSolenoid.set(true);
-    }
 
-    public void dropShooter() {
-        m_shooterSolenoid.set(false);
-    }
 
-    public void shoot() {
-        setLowerShooter(1.0);
-        setUpperShooter(1.0);
-    }
 
-    public void stop() {
-        setLowerShooter(0.0);
-        setUpperShooter(0.0);
-    }
 }
 
