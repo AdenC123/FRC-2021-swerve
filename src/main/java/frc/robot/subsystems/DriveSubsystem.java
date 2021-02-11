@@ -244,6 +244,7 @@ public class DriveSubsystem extends SubsystemBase {
         // instantaneously. In that case, we can make a pretty good guess how the robot moved on the field.
 
         // Get the average speed and heading for this interval
+        // TODO - what if NavX fails? Then we need to do heading based on last known heading and chassis rotation speed.
         double currentHeading = m_navx.getHeading();
         double aveHeading = (m_lastHeading + currentHeading) * 0.5;
         double aveForward = (m_lastChassisForward + m_thisChassisForward) * 0.5;
