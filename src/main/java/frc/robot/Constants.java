@@ -7,7 +7,16 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Filesystem;
 import org.a05annex.util.Utl;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ContainerFactory;
+import org.json.simple.parser.ParseException;
+
+import java.io.FileWriter;
+import java.io.IOException;
+
+import static org.a05annex.util.JsonSupport.*;
 import static org.a05annex.util.Utl.TWO_PI;
 
 /**
@@ -43,9 +52,9 @@ public final class Constants {
 
     public static final class CalibrationOffset {
         public static final double
-            RF = 0.911,
-            RR = 0.982,
-            LR = 0.771,
+            RF = 0.916,
+            RR = 0.980,
+            LR = 0.774,
             LF = 0.853;
     }
 
@@ -86,7 +95,85 @@ public final class Constants {
     // drive encoder tics per radian of robot rotation when rotation is controlled by position rather than speed.
     public static double DRIVE_POS_TICS_PER_RADIAN = 10.385;
 
+    // driver enumerator
+    public enum DRIVERS {
+        NOLAN("Nolan", Filesystem.getDeployDirectory().toString() + "/drivers/nolan.json"),
+        KALVIN("Kalvin", Filesystem.getDeployDirectory().toString() + "/drivers/kalvin.json");
+
+        private static final String USE_CONTROLLER = "USE_CONTROLLER";
+        private static final String XBOX_CONTROLLER = "XBOX";
+        private static final String JOYSTICK_CONTROLLER = "JOYSTICK";
+
+        private static final String DRIVE_DEADBAND = "DRIVE_DEADBAND";
+        private static final String DRIVE_SPEED_SENSITIVITY = "DRIVE_SPEED_SENSITIVITY";
+        private static final String DRIVE_SPEED_GAIN = "DRIVE_SPEED_GAIN";
+        private static final String TWIST_DEADBAND = "TWIST_DEADBAND";
+        private static final String TWIST_SENSITIVITY = "TWIST_SENSITIVITY";
+        private static final String TWIST_GAIN = "TWIST_GAIN";
+
+        String m_driverName;
+        String m_driverFile;
+        DRIVERS(String driverName, String driverFile) {
+            m_driverName = driverName;
+            m_driverFile = driverFile;
+        }
+
+        public void load() {
+            try {
+                JSONObject dict = readJsonFileAsJSONObject(m_driverFile);
+                if (null != dict) {
+                    // Read in the driver data
+                    Constants.USE_CONTROLLER = parseString(dict, USE_CONTROLLER, Constants.USE_CONTROLLER);
+                    Constants.DRIVE_DEADBAND = parseDouble(dict, DRIVE_DEADBAND, Constants.DRIVE_DEADBAND);
+                    Constants.DRIVE_SPEED_SENSITIVITY = parseDouble(dict, DRIVE_SPEED_SENSITIVITY, Constants.DRIVE_SPEED_SENSITIVITY);
+                    Constants.DRIVE_SPEED_GAIN = parseDouble(dict, DRIVE_SPEED_GAIN, Constants.DRIVE_SPEED_GAIN);
+                    Constants.TWIST_DEADBAND = parseDouble(dict, TWIST_DEADBAND, Constants.TWIST_DEADBAND);
+                    Constants.TWIST_SENSITIVITY = parseDouble(dict, TWIST_SENSITIVITY, Constants.TWIST_SENSITIVITY);
+                    Constants.TWIST_GAIN = parseDouble(dict, TWIST_GAIN, Constants.TWIST_GAIN);
+                }
+
+            } catch (IOException | ParseException | ClassCastException | NullPointerException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public static void save() {
+            JSONObject dict = new JSONObject();
+            dict.put(USE_CONTROLLER, Constants.USE_CONTROLLER);
+            dict.put(DRIVE_DEADBAND, Constants.DRIVE_DEADBAND);
+            dict.put(DRIVE_SPEED_SENSITIVITY, Constants.DRIVE_SPEED_SENSITIVITY);
+            dict.put(DRIVE_SPEED_GAIN, Constants.DRIVE_SPEED_GAIN);
+            dict.put(TWIST_DEADBAND, Constants.TWIST_DEADBAND);
+            dict.put(TWIST_SENSITIVITY, Constants.TWIST_SENSITIVITY);
+            dict.put(TWIST_GAIN, Constants.TWIST_GAIN);
+            try (FileWriter file = new FileWriter(Constants.currentDriver.m_driverFile)) {
+                file.write(dict.toJSONString());
+                file.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public static void setDriverAtID(int ID) {
+            switch (ID) {
+                case 0:
+                    Constants.currentDriver = NOLAN;
+                    break;
+                case 1:
+                    Constants.currentDriver = KALVIN;
+                    break;
+                default:
+                    Constants.currentDriver = KALVIN;
+            }
+            Constants.currentDriver.load();
+        }
+    }
+
     // used in DriveCommand
+    public static DRIVERS currentDriver = DRIVERS.KALVIN;
+
+    public static String USE_CONTROLLER = DRIVERS.JOYSTICK_CONTROLLER;
+
     public static double DRIVE_DEADBAND = 0.1;
     public static double DRIVE_SPEED_SENSITIVITY = 2.0;
     public static double DRIVE_SPEED_GAIN = 0.5;

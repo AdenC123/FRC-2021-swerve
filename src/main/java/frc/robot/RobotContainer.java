@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.*;
@@ -77,7 +78,7 @@ public class RobotContainer {
 
     // commands
     //m_driveCommand = new DriveCommand(m_stick, m_driveSubsystem);
-    m_driveCommandXbox = new DriveCommandXbox(m_xbox, m_driveSubsystem, m_odometryTargetError);
+    m_driveCommandXbox = new DriveCommandXbox(m_xbox, m_stick, m_driveSubsystem);
 
     // set default commands
     //m_driveSubsystem.setDefaultCommand(m_driveCommand);
@@ -105,6 +106,8 @@ public class RobotContainer {
 
     m_button12.whenPressed(new BumpTwistGain(-0.1));
     m_button10.whenPressed(new BumpTwistGain(0.1));
+
+    m_button7.whenPressed(new InstantCommand(Constants.DRIVERS::save));
   }
 
 
