@@ -17,7 +17,7 @@ import org.a05annex.util.geo2d.KochanekBartelsSpline.PathPoint;
 public class FollowPathCommand extends CommandBase {
 
   private DriveSubsystem m_driveSubsystem;
-  private final KochanekBartelsSpline m_spline = new KochanekBartelsSpline();
+  private final KochanekBartelsSpline m_spline;
   private PathFollower m_pathFollower;
   private boolean m_isFinished = false;
   private long m_startTime;
@@ -25,12 +25,11 @@ public class FollowPathCommand extends CommandBase {
   /**
    * Creates a new FollowPathCommand.
    */
-  public FollowPathCommand(String pathName, DriveSubsystem driveSubsystem) {
+  public FollowPathCommand(KochanekBartelsSpline path, DriveSubsystem driveSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_driveSubsystem = driveSubsystem;
     addRequirements(m_driveSubsystem);
-
-    m_spline.loadPath(pathName);
+    m_spline = path;
   }
 
   // Called when the command is initially scheduled.

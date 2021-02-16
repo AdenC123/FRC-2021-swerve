@@ -8,7 +8,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -67,6 +66,8 @@ public class RobotContainer {
   private DigitalInput switch3 = new DigitalInput(3);
   private DigitalInput switch4 = new DigitalInput(4);
 
+  private Command m_autonomousCommand = null;
+
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
@@ -83,6 +84,10 @@ public class RobotContainer {
     // set default commands
     //m_driveSubsystem.setDefaultCommand(m_driveCommand);
     m_driveSubsystem.setDefaultCommand(m_driveCommandXbox);
+
+    // set the default autonomous command -
+    Constants.AutonomousPath.setAutonomousToId(readAutoID());
+    m_autonomousCommand = new FollowPathCommand(Constants.AutonomousPath.load(), m_driveSubsystem);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -106,7 +111,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return null;
+    return m_autonomousCommand;
   }
 
   public int readDriverID() {

@@ -43,7 +43,7 @@ def includeDesktopSupport = false
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 4.
 dependencies {
-    compile 'org.a05annex:a05annexUtil:0.8.5'
+    compile 'org.a05annex:a05annexUtil:0.8.6'
     compile 'org.jetbrains:annotations:17.0.0'
 
     implementation wpi.deps.wpilib()
