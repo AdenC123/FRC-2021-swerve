@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.NavX;
 import frc.robot.subsystems.DriveSubsystem;
 import org.a05annex.util.geo2d.KochanekBartelsSpline;
 import org.a05annex.util.geo2d.KochanekBartelsSpline.PathFollower;
@@ -49,13 +50,15 @@ public class FollowPathCommand extends CommandBase {
       m_isFinished = true;
       m_driveSubsystem.swerveDriveComponents(0, 0, 0);
     } else {
+      double errorRotation = (point.fieldHeading - NavX.getInstance().getHeading()) * Constants.TARGET_kP;
       // TODO - The expected heading is included in the PathPoint. The path point is the instantaneous
       // TODO - speed and position that we want to be at NOW. If the heading is incorrect, then the
       // TODO - direction the forward and strafe is incorrect and we will be at the wrong place on
       // TODO - the field. So we need a PID correction of heading incorporated here.
       double forward = point.speedForward / Constants.MAX_METERS_PER_SEC;
       double strafe = point.speedStrafe / Constants.MAX_METERS_PER_SEC;
-      double rotation = point.speedRotation / Constants.MAX_RADIANS_PER_SEC;
+//      double rotation = (point.speedRotation / Constants.MAX_RADIANS_PER_SEC) + errorRotation;
+      double rotation = (point.speedRotation / Constants.MAX_RADIANS_PER_SEC);
       m_driveSubsystem.swerveDriveComponents(forward, strafe, rotation);
     }
   }

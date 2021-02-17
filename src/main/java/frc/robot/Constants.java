@@ -69,7 +69,7 @@ public final class Constants {
     // can travel or turn in one command cycle at full speed because for path following we need to know how
     // big to make the increments along the path, and need a pretty good estimate of where the robot is for
     // making course corrections.
-    public static final double MAX_METERS_PER_SEC = 3.1951;
+    public static final double MAX_METERS_PER_SEC = 3.2;
     public static final double MAX_RADIANS_PER_SEC = MAX_METERS_PER_SEC / DRIVE_RADIUS;
 
     // PID values for the spin spark motor controller PID loop
@@ -118,7 +118,7 @@ public final class Constants {
 //        CAL_STRAIGHT("cal straight", 6, "cal_straight.json"),
 //        CAL_ROTATE("cal rotate", 7, "cal_rotate.json");
         CAL_CIRCLE_1("cal circle 1", 0, "cal_circle_1.json"),
-        CAL_CIRCLE_2("cal circle 2", 1, "cal_circle_2.json"),
+        CAL_CIRCLE_2("cal circle 3", 1, "cal_circle_3.json"),
         CAL_STRAIGHT("cal straight", 2, "cal_straight.json"),
         CAL_ROTATE("cal rotate", 3,"cal_rotate.json");
 
