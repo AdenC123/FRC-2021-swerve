@@ -43,9 +43,9 @@ public final class Constants {
 
     public static final class CalibrationOffset {
         public static final double
-            RF = 0.911,
-            RR = 0.982,
-            LR = 0.771,
+            RF = 0.916,
+            RR = 0.980,
+            LR = 0.774,
             LF = 0.853;
     }
 
