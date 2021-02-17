@@ -109,14 +109,18 @@ public final class Constants {
     public static double TARGET_kP = 0.5;
 
     public enum AutonomousPath {
-        BARREL_RACING("Barrel Racing", 0, "2021_barrel_racing.json"),
-        SLOLEM("Slalom", 1, "2021_slalom.json"),
-        BOUNCE("Bounce", 2, "2021_bounce.json"),
-        LIGHTSPEED("Lightspeed", 3, "2021_lightspeed.json"),
-        CAL_CIRCLE_1("cal circle 1", 4, "cal_circle_1.json"),
-        CAL_CIRCLE_2("cal circle 2", 5, "cal_circle_2.json"),
-        CAL_STRAIGHT("cal straight", 6, "cal_straight.json"),
-        CAL_ROTATE("cal rotate", 7, "cal_rotate.json");
+//        BARREL_RACING("Barrel Racing", 0, "2021_barrel_racing.json"),
+//        SLALOM("Slalom", 1, "2021_slalom.json"),
+//        BOUNCE("Bounce", 2, "2021_bounce.json"),
+//        LIGHTSPEED("Lightspeed", 3, "2021_lightspeed.json"),
+//        CAL_CIRCLE_1("cal circle 1", 4, "cal_circle_1.json"),
+//        CAL_CIRCLE_2("cal circle 2", 5, "cal_circle_2.json"),
+//        CAL_STRAIGHT("cal straight", 6, "cal_straight.json"),
+//        CAL_ROTATE("cal rotate", 7, "cal_rotate.json");
+        CAL_CIRCLE_1("cal circle 1", 0, "cal_circle_1.json"),
+        CAL_CIRCLE_2("cal circle 2", 1, "cal_circle_2.json"),
+        CAL_STRAIGHT("cal straight", 2, "cal_straight.json"),
+        CAL_ROTATE("cal rotate", 3,"cal_rotate.json");
 
         static AutonomousPath AUTONOMOUS_PATH = AutonomousPath.CAL_STRAIGHT;
 
