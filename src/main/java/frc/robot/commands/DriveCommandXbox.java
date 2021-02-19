@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.NavX;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IGetTargetError;
 import org.a05annex.util.Utl;
@@ -21,6 +22,7 @@ public class DriveCommandXbox extends CommandBase {
   private final XboxController m_xbox;
   private final Joystick m_stick;
   private final DriveSubsystem m_driveSubsystem;
+  private final NavX m_navx = NavX.getInstance();
 
   /**
    * Drive using an xbox controller, with left stick Y being forward, left stick X being strafe,
@@ -50,7 +52,8 @@ public class DriveCommandXbox extends CommandBase {
       stickY = -m_xbox.getY(GenericHID.Hand.kLeft);
       stickX = m_xbox.getX(GenericHID.Hand.kLeft);
       stickTwist = m_xbox.getX(GenericHID.Hand.kRight);
-    } else { // if not xbox, controller should be joystick
+    } else {
+      // if not xbox, controller should be joystick
       stickY = -m_stick.getY();
       stickX = m_stick.getX();
       stickTwist = m_stick.getTwist();
@@ -70,21 +73,28 @@ public class DriveCommandXbox extends CommandBase {
     // add gain and sensitivity
     speed = Math.pow(speed, Constants.DRIVE_SPEED_SENSITIVITY) * Constants.DRIVE_SPEED_GAIN;
 
-    // either do rotation with right stick, or PID to target
+    // either do rotation with right stick, or PID to last expected heading
     double rotation;
     // Use the stick forward, strafe, twist as specified by the driver. NOTE: if the driver does
     // not specify a twist, then this command should be applying a rotation correction to maintain
     // the current heading.
     double rotMult = (stickTwist < 0.0) ? -1.0 : 1.0;
     stickTwist = Math.abs(stickTwist);
-    // do deadband on rotation
+    // do deadband on rotation and track to heading if not touching right stick
     if (stickTwist < Constants.TWIST_DEADBAND) {
-      // TODO - OK, no twist is specified - we should be trying to maintain the expected heading
-      rotation = 0.0;
+      // OK, no twist is specified - we should be trying to maintain the expected heading
+      m_navx.recomputeHeading(false);
+      NavX.HeadingInfo headingInfo = m_navx.getHeadingInfo();
+      if (null != headingInfo) {
+        rotation = (headingInfo.expectedHeading - headingInfo.heading) * Constants.TARGET_kP;
+      } else {
+        rotation = 0.0;
+      }
     } else {
-      // TODO - OK, twist is specified, we should be updating the expected heading to match the
-      // TODO - current robot heading.
+      // OK, twist is specified, we should be updating the expected heading to match the
+      // current robot heading.
       rotation = (stickTwist - Constants.TWIST_DEADBAND) / (1.0 - Constants.TWIST_DEADBAND);
+      m_navx.recomputeHeading(true);
     }
     // add sensitivity, gain and sign
     rotation = Math.pow(rotation, Constants.TWIST_SENSITIVITY) * Constants.TWIST_GAIN * rotMult;
