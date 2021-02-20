@@ -135,6 +135,7 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
 
     // Read driver and auto from switchboard
+    Constants.DRIVERS.setDriverAtID(m_robotContainer.readDriverID());
 
     m_navx = NavX.getInstance();
     m_navx.initializeHeadingAndNav();

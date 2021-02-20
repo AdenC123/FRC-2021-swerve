@@ -44,6 +44,7 @@ def includeDesktopSupport = false
 // Also defines JUnit 4.
 dependencies {
     compile 'org.a05annex:a05annexUtil:0.8.6'
+    compile 'com.googlecode.json-simple:json-simple:1.1.1'
     compile 'org.jetbrains:annotations:17.0.0'
 
     implementation wpi.deps.wpilib()

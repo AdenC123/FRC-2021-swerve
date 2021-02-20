@@ -78,7 +78,7 @@ public class NavX {
         // In the past we have always initialized with the front of the robot facing down field, so the
         // heading was 0.0 at initialization. In this case we are
         m_refPitch = m_ahrs.getPitch();
-        m_refYaw = -m_ahrs.getYaw();
+        m_refYaw = m_ahrs.getYaw();
         m_refRoll = m_ahrs.getRoll();
         m_refHeading = Math.toDegrees(heading);
         m_headingRawLast = 0.0;
@@ -122,15 +122,15 @@ public class NavX {
      */
     public void recomputeHeading(boolean setExpectedToCurrent) {
         m_setExpectedToCurrent = setExpectedToCurrent;
-        double heading_raw = -m_ahrs.getYaw();
+        double heading_raw = m_ahrs.getYaw();
         // This is the logic for detecting and correcting for the IMU discontinuity at +180degrees and -180degrees.
-        if (m_headingRawLast < -150.0 && heading_raw > 0.0) {
+        if (m_headingRawLast < -90.0 && heading_raw > 0.0) {
             // The previous raw IMU heading was negative and close to the discontinuity, and it is now positive. We
             // have gone through the discontinuity so we decrement the heading revolutions by 1 (we completed a
             // negative revolution). NOTE: the initial check protects from the case that the heading is near 0 and
             // goes continuously through 0, which is not the completion of a revolution.
             m_headingRevs--;
-        } else if (m_headingRawLast > 150.0 && heading_raw < 0.0) {
+        } else if (m_headingRawLast > 90.0 && heading_raw < 0.0) {
             // The previous raw IMU heading was positive and close to the discontinuity, and it is now negative. We
             // have gone through the discontinuity so we increment the heading revolutions by 1 (we completed
             // positive revolution). NOTE: the initial check protects from the case that the heading is near 0 and
@@ -192,9 +192,9 @@ public class NavX {
         // mounted, or there being some bias in the NavX - i.e. the ref represents the value first reported when
         // the reference position is set, see initializeHeadingAndNav().
         return new NavInfo(
-                Math.toRadians(m_ahrs.getPitch() - m_refPitch), Math.toRadians((-m_ahrs.getYaw()) - m_refYaw),
+                Math.toRadians(m_ahrs.getPitch() - m_refPitch), Math.toRadians(m_ahrs.getYaw() - m_refYaw),
                 Math.toRadians(m_ahrs.getRoll() - m_refRoll), Math.toRadians(m_ahrs.getPitch()),
-                Math.toRadians(-m_ahrs.getYaw()), Math.toRadians(m_ahrs.getRoll()));
+                Math.toRadians(m_ahrs.getYaw()), Math.toRadians(m_ahrs.getRoll()));
     }
 
     public static class HeadingInfo {

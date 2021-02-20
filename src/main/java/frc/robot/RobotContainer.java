@@ -79,7 +79,7 @@ public class RobotContainer {
 
     // commands
     //m_driveCommand = new DriveCommand(m_stick, m_driveSubsystem);
-    m_driveCommandXbox = new DriveCommandXbox(m_xbox, m_driveSubsystem, m_odometryTargetError);
+    m_driveCommandXbox = new DriveCommandXbox(m_xbox, m_stick, m_driveSubsystem);
 
     // set default commands
     //m_driveSubsystem.setDefaultCommand(m_driveCommand);
