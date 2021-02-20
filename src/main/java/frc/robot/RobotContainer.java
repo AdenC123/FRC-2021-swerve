@@ -108,6 +108,7 @@ public class RobotContainer {
     m_button10.whenPressed(new BumpTwistGain(0.1));
 
     m_button7.whenPressed(new InstantCommand(Constants.DRIVERS::save));
+    m_button8.whenPressed(new InstantCommand(Constants.DRIVERS::switchControlScheme));
   }
 
 

@@ -167,6 +167,15 @@ public final class Constants {
             }
             Constants.currentDriver.load();
         }
+
+        public static void switchControlScheme() {
+            if (Constants.USE_CONTROLLER.equals(JOYSTICK_CONTROLLER)) {
+                Constants.USE_CONTROLLER = XBOX_CONTROLLER;
+            } else {
+                // if not stick, it's xbox
+                Constants.USE_CONTROLLER = JOYSTICK_CONTROLLER;
+            }
+        }
     }
 
     // used in DriveCommand
@@ -191,4 +200,8 @@ public final class Constants {
     // PID values for rotation to target using a PID on current heading and target direction to keep ths robot
     // oriented to the target while driving.
     public static double TARGET_kP = 0.5;
+
+    public static double DRIVE_ORIENTATION_kP = 0.2;
+
+
 }

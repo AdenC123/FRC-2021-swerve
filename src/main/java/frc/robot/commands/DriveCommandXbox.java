@@ -83,10 +83,11 @@ public class DriveCommandXbox extends CommandBase {
     // do deadband on rotation and track to heading if not touching right stick
     if (stickTwist < Constants.TWIST_DEADBAND) {
       // OK, no twist is specified - we should be trying to maintain the expected heading
-      m_navx.recomputeHeading(false);
       NavX.HeadingInfo headingInfo = m_navx.getHeadingInfo();
       if (null != headingInfo) {
-        rotation = (headingInfo.expectedHeading - headingInfo.heading) * Constants.TARGET_kP;
+        rotation = (headingInfo.expectedHeading - headingInfo.heading) * Constants.DRIVE_ORIENTATION_kP;
+        rotation = Math.min(Math.max(rotation, -0.5), 0.5);
+//        rotation = 0.0;
       } else {
         rotation = 0.0;
       }
@@ -94,10 +95,10 @@ public class DriveCommandXbox extends CommandBase {
       // OK, twist is specified, we should be updating the expected heading to match the
       // current robot heading.
       rotation = (stickTwist - Constants.TWIST_DEADBAND) / (1.0 - Constants.TWIST_DEADBAND);
-      m_navx.recomputeHeading(true);
+      m_navx.setExpectedHeadingToCurrent();
+      // add sensitivity, gain and sign
+      rotation = Math.pow(rotation, Constants.TWIST_SENSITIVITY) * Constants.TWIST_GAIN * rotMult;
     }
-    // add sensitivity, gain and sign
-    rotation = Math.pow(rotation, Constants.TWIST_SENSITIVITY) * Constants.TWIST_GAIN * rotMult;
     // find direction, if the speed is 0 then it won't rotate
     double direction = Math.atan2(stickX, stickY);
     m_driveSubsystem.swerveDriveFieldRelative(direction, speed, rotation);

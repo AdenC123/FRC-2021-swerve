@@ -117,6 +117,7 @@ public class Robot extends TimedRobot {
     m_lastPort6 = dashboardTelemetry(6, "Twist Sens:", Constants.TWIST_SENSITIVITY, m_lastPort6);
     m_lastPort7 = dashboardTelemetry(7, "Drv Gain:", Constants.DRIVE_SPEED_GAIN, m_lastPort7);
     m_lastPort8 = dashboardTelemetry(8, "Twist Gain:", Constants.TWIST_GAIN, m_lastPort8);
+    m_lastPort9 = dashboardTelemetry(9, "Exp. Heading", m_navx.getHeadingInfo().expectedHeading, m_lastPort9);
   }
 
   /**
