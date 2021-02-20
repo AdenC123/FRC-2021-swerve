@@ -28,7 +28,7 @@ public class LimelightSubsystem extends SubsystemBase implements IGetTargetError
    */
   public LimelightSubsystem() {
       updateVisionData();
-      setPipeline(Constants.PIPELINE_COLLECTION);
+      setPipeline(Constants.PIPELINE_SHOOTER);
   }
 
   private void updateVisionData() {
@@ -65,7 +65,7 @@ public class LimelightSubsystem extends SubsystemBase implements IGetTargetError
   }
 
   public double distanceToTarget() {
-    return (Constants.TARGET_HEIGHT_IN - Constants.LIMELIGHT_HEIGHT_IN) / Math.tan(Constants.LIMELIGHT_ANGLE_RAD + m_y);
+    return (Constants.TARGET_HEIGHT - Constants.LIMELIGHT_HEIGHT) / Math.tan(Constants.LIMELIGHT_ANGLE_RAD + m_y);
     
   }
 

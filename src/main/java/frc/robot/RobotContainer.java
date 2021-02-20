@@ -91,7 +91,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     m_xboxA.whenPressed(new SetLimelightPipeline(m_limelightSubsystem, Constants.PIPELINE_DRIVER));
-    m_xboxB.whenPressed(new SetLimelightPipeline(m_limelightSubsystem, Constants.PIPELINE_COLLECTION));
+    m_xboxB.whenPressed(new SetLimelightPipeline(m_limelightSubsystem, Constants.PIPELINE_SHOOTER));
   }
 
 

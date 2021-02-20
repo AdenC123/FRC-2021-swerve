@@ -98,7 +98,7 @@ public final class Constants {
     public static double DRIVE_SPEED = 0.0;
 
     // PID values for rotation to target
-    public static double TARGET_kP = 0.5;
+    public static double TARGET_kP = 0.8;
 
     // Limelight pipeline number
     public static final int PIPELINE_COLLECTION = 0;
@@ -106,7 +106,7 @@ public final class Constants {
     public static final int PIPELINE_SHOOTER = 2;
 
     // Limelight angles and heights (use better units dumabss)
-    public static double LIMELIGHT_ANGLE_RAD = -0.11;
-    public static double TARGET_HEIGHT_IN = 14.1;
-    public static double LIMELIGHT_HEIGHT_IN = 6.6;
+    public static double LIMELIGHT_ANGLE_RAD = 0.70;
+    public static double TARGET_HEIGHT = 2.31;
+    public static double LIMELIGHT_HEIGHT = 0.42;
 }
