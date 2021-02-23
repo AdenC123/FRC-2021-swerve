@@ -234,11 +234,18 @@ public final class Constants {
       return AUTONOMOUS_PATH.m_pathName;
     }
 
+    /**
+     * Load this autonomous path.
+     * @return The loaded path, {@code null} if the path could npot be loaded.
+     */
     public static KochanekBartelsSpline load() {
       KochanekBartelsSpline spline = new KochanekBartelsSpline();
-      spline.loadPath(Filesystem.getDeployDirectory().toString() + "/paths/" +
-          AUTONOMOUS_PATH.m_filename);
-      return spline;
+      if (spline.loadPath(Filesystem.getDeployDirectory().toString() + "/paths/" +
+              AUTONOMOUS_PATH.m_filename)) {
+          return spline;
+      } else {
+          return null;
+      }
     }
 
     public static void setAutonomousToId(int id) {

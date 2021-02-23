@@ -18,6 +18,7 @@ import frc.robot.commands.DriveCommandXbox;
 import frc.robot.commands.FollowPathCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.OdometryTargetError;
+import org.a05annex.util.geo2d.KochanekBartelsSpline;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -66,7 +67,8 @@ public class RobotContainer {
   private DigitalInput switch3 = new DigitalInput(3);
   private DigitalInput switch4 = new DigitalInput(4);
 
-  private Command m_autonomousCommand = null;
+  private FollowPathCommand m_autonomousCommand = null;
+  private KochanekBartelsSpline m_autonomousSpline = null;
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -87,7 +89,10 @@ public class RobotContainer {
 
     // set the default autonomous command -
     Constants.AutonomousPath.setAutonomousToId(readAutoID());
-    m_autonomousCommand = new FollowPathCommand(Constants.AutonomousPath.load(), m_driveSubsystem);
+    m_autonomousSpline = Constants.AutonomousPath.load();
+    if ( m_autonomousSpline != null) {
+      m_autonomousCommand = new FollowPathCommand(m_autonomousSpline, m_driveSubsystem);
+    }
 
     // Configure the button bindings
     configureButtonBindings();
@@ -100,7 +105,8 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // m_xboxA.whenPressed(new FollowPathCommand(Filesystem.getDeployDirectory().toString() + "/figure_eight_path.json", m_driveSubsystem));
+    // m_xboxA.whenPressed(new FollowPathCommand(Filesystem.getDeployDirectory().toString() +
+    // "/figure_eight_path.json", m_driveSubsystem));
   }
 
 
@@ -109,8 +115,11 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
+  public FollowPathCommand getAutonomousCommand() {
+    // In this method is called it means the robot are getting ready to run an autonomous path. Before we run tha
+    // path we need to make sure the NavX is initialized to the robot heading (which may not be 0.0) and that
+    // the swerve drive modules are prepared (oriented in the right direction) for the first command in the path.
+
     return m_autonomousCommand;
   }
 

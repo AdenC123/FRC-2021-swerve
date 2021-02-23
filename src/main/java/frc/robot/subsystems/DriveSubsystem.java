@@ -94,15 +94,98 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     /**
-     * Swerve drive with a forward, strafe and rotate.
+     * Run the swerve drive with the specified {@code  forward}, {@code strafe}, and {@code rotation} chassis
+     * relative components.
      *
-     * @param forward  Drive forward. From -1 to 1.
-     * @param strafe   Strafe right. From -1 to 1.
-     * @param rotation Clockwise rotation. From -1 to 1.
+     * @param forward  Drive forward. From -1 (full backwards) to 1 (full forwards.
+     * @param strafe   Strafe right. From -1 (full left)  to 1 (full right).
+     * @param rotation Clockwise rotation. From -1 (full counter-clockwise) to 1 (full clockwise).
      */
     public void swerveDriveComponents(double forward, double strafe,
                                        double rotation) {
+        setModulesForChassisMotion(forward, strafe, rotation,true);
+//        // calculate a, b, c and d variables
+//        double a = strafe - (rotation * LENGTH_OVER_DIAGONAL);
+//        double b = strafe + (rotation * LENGTH_OVER_DIAGONAL);
+//        double c = forward - (rotation * WIDTH_OVER_DIAGONAL);
+//        double d = forward + (rotation * WIDTH_OVER_DIAGONAL);
+//
+//        // calculate wheel speeds
+//        double rfSpeed = Utl.length(b, c);
+//        double lfSpeed = Utl.length(b, d);
+//        double lrSpeed = Utl.length(a, d);
+//        double rrSpeed = Utl.length(a, c);
+//
+//        // normalize speeds
+//        double max = Utl.max(rfSpeed, lfSpeed, lrSpeed, rrSpeed);
+//        if (max > 1.0) {
+//            rfSpeed /= max;
+//            lfSpeed /= max;
+//            lrSpeed /= max;
+//            rrSpeed /= max;
+//            forward /= max;
+//            strafe /= max;
+//            rotation /= max;
+//        }
+//
+//        // if speed is small or 0, (i.e. essentially stopped), use the last angle because its next motion
+//        // will probably be very close to its current last motion - i.e. the next direction will probably
+//        // be very close to the last direction.
+//        m_RF_lastRadians = (rfSpeed < Constants.SMALL) ? m_RF_lastRadians : Math.atan2(b, c);
+//        m_LF_lastRadians = (lfSpeed < Constants.SMALL) ? m_LF_lastRadians : Math.atan2(b, d);
+//        m_LR_lastRadians = (lrSpeed < Constants.SMALL) ? m_LR_lastRadians : Math.atan2(a, d);
+//        m_RR_lastRadians = (rrSpeed < Constants.SMALL) ? m_RR_lastRadians : Math.atan2(a, c);
+//
+//        // run wheels at speeds and angles
+//        m_rf.setRadiansAndSpeed(m_RF_lastRadians, rfSpeed);
+//        m_lf.setRadiansAndSpeed(m_LF_lastRadians, lfSpeed);
+//        m_lr.setRadiansAndSpeed(m_LR_lastRadians, lrSpeed);
+//        m_rr.setRadiansAndSpeed(m_RR_lastRadians, rrSpeed);
+//
+//        // save the values we set for use in odometry calculations
+//        m_thisChassisForward = forward;
+//        m_thisChassisStrafe = strafe;
+//        m_thisChassisRotation = rotation;
+    }
 
+    /**
+     * Prepare the swerve drive to run with the swerve drive with the specified {@code  forward}, {@code strafe},
+     * and {@code rotation} chassis relative components. 'Prepare', in this context, means orient all the modules
+     * so they are ready to perform this command but set the module speeds to 0.0; In this way movement can start
+     * smoothly without additional module reorientation. This method is used to initialize the robot before the
+     * start of an autonomous path.
+     *
+     * @param forward  Drive forward. From -1 (full backwards) to 1 (full forwards.
+     * @param strafe   Strafe right. From -1 (full left)  to 1 (full right).
+     * @param rotation Clockwise rotation. From -1 (full counter-clockwise) to 1 (full clockwise).
+     */
+    public void prepareForDriveComponents(double forward, double strafe,
+                                          double rotation)
+    {
+        setModulesForChassisMotion(forward, strafe, rotation,false);
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            //  If this is interrupted it is because the robot is being shut down - that is OK
+        }
+
+    }
+
+    /**
+     * The internal method to run, or prepare to run, the swerve drive with the specified {@code  forward},
+     * {@code strafe}, and {@code rotation} chassis relative components.
+     *
+     *
+     * @param forward  Drive forward. From -1 (full backwards) to 1 (full forwards.
+     * @param strafe   Strafe right. From -1 (full left)  to 1 (full right).
+     * @param rotation Clockwise rotation. From -1 (full counter-clockwise) to 1 (full clockwise).
+     * @param setSpeeds (boolean) {@code true} if module speeds should be set to run the modules, {@code false} if
+     *                  this method is being called to prepare (set the direction of) the modules to run this command.
+     *                  If {@code false}, module speeds will be 0.0 and there should be no robot motion.
+     */
+    private void setModulesForChassisMotion(double forward, double strafe,
+                                           double rotation, boolean setSpeeds)
+    {
         // calculate a, b, c and d variables
         double a = strafe - (rotation * LENGTH_OVER_DIAGONAL);
         double b = strafe + (rotation * LENGTH_OVER_DIAGONAL);
@@ -136,15 +219,16 @@ public class DriveSubsystem extends SubsystemBase {
         m_RR_lastRadians = (rrSpeed < Constants.SMALL) ? m_RR_lastRadians : Math.atan2(a, c);
 
         // run wheels at speeds and angles
-        m_rf.setRadiansAndSpeed(m_RF_lastRadians, rfSpeed);
-        m_lf.setRadiansAndSpeed(m_LF_lastRadians, lfSpeed);
-        m_lr.setRadiansAndSpeed(m_LR_lastRadians, lrSpeed);
-        m_rr.setRadiansAndSpeed(m_RR_lastRadians, rrSpeed);
+        m_rf.setRadiansAndSpeed(m_RF_lastRadians, setSpeeds ? rfSpeed : 0.0);
+        m_lf.setRadiansAndSpeed(m_LF_lastRadians, setSpeeds ? lfSpeed : 0.0);
+        m_lr.setRadiansAndSpeed(m_LR_lastRadians, setSpeeds ? lrSpeed : 0.0);
+        m_rr.setRadiansAndSpeed(m_RR_lastRadians, setSpeeds ? rrSpeed : 0.0);
 
         // save the values we set for use in odometry calculations
-        m_thisChassisForward = forward;
-        m_thisChassisStrafe = strafe;
-        m_thisChassisRotation = rotation;
+        m_thisChassisForward = setSpeeds ? forward : 0.0;
+        m_thisChassisStrafe = setSpeeds ? strafe : 0.0;
+        m_thisChassisRotation = setSpeeds ? rotation : 0.0;
+
     }
 
     /**
@@ -193,7 +277,7 @@ public class DriveSubsystem extends SubsystemBase {
      *
      * @param fieldX  (double) The X location of the robot on the field.
      * @param fieldY  (double) The Y location of the robot on the field.
-     * @param heading (double) The heading of the robot on the field.
+     * @param heading (double) The heading of the robot on the field., in radians.
      */
     public void setFieldPosition(double fieldX, double fieldY, double heading) {
         m_fieldX = fieldX;
@@ -215,6 +299,13 @@ public class DriveSubsystem extends SubsystemBase {
         return m_fieldHeading;
     }
 
+    /**
+     * Rotate the chassis to the specified heading with no field translation. This controls the module using distance
+     * (i.e. moving a specified number of ticks) rather than speed because this adjustment of heading is faster
+     * and more reliable.
+     *
+     * @param targetHeading double) The desired chassis heading on the field, in radians.
+     */
     public void setHeading(double targetHeading) {
         m_RF_lastRadians = Math.atan2(Constants.DRIVE_LENGTH, -Constants.DRIVE_WIDTH);
         m_LF_lastRadians = Math.atan2(Constants.DRIVE_LENGTH, Constants.DRIVE_WIDTH);
@@ -232,6 +323,9 @@ public class DriveSubsystem extends SubsystemBase {
         m_thisChassisStrafe = 0.0;
     }
 
+    /**
+     *
+     */
     @Override
     public void periodic() {
         // This method will be called once per scheduler run

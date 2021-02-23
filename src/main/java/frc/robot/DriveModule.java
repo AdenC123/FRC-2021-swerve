@@ -206,24 +206,27 @@ public class DriveModule {
     }
 
     /**
+     * Returns the last speed that was set for this module in m/sec.
      *
-     * @return
+     * @return The last speed that was set in m/sec.
      */
     public double getLastSpeed() {
         return m_lastSpeed * Constants.MAX_DRIVE_VELOCITY;
     }
 
     /**
+     * Returns the last speed that was set for this module normalized to 0.0-1.0.
      *
-     * @return
+     * @return the last normalized speed that was set.
      */
     public double getLastNormalizedSpeed() {
         return m_lastSpeed;
     }
 
     /**
+     * Get the last direction set for the module.
      *
-     * @return
+     * @return the last direction se (in radians)
      */
     public double getLastRadians() {
         return m_lastRadians;
@@ -249,7 +252,14 @@ public class DriveModule {
     public void setDegreesAndSpeed(double targetDegrees, double speed) {
         setRadiansAndSpeed(Math.toRadians(targetDegrees), speed);
     }
-    
+
+    /**
+     * Set the module direction in radians. This code finds the closest forward-backward direction and sets the
+     * foward-backaward multiplier for speed.
+     *
+     * @param targetRadians (double) The direction from -pi to pi radians where 0.0 is towards the
+     *      *                      front of the robot, and positive is clockwise.
+     */
     public void setRadians(double targetRadians) {
         // The real angle of the front of the wheel is 180 degrees away from the current angle if the wheel
         // is going backwards (i.e. the m_lastAngle was the last target angle
@@ -311,9 +321,13 @@ public class DriveModule {
     }
 
     /**
+     * Set the direction and distance in encoder tics that the module should move. We use this for targeting when we
+     * the robot is stopped and we are trying to get very fast response and a very solid lock on the target. This is
+     * far more reliable that trying to use a PID to control rotation speed to lock on target.
      *
-     * @param targetRadians
-     * @param deltaTics
+     * @param targetRadians (double) The direction from -pi to pi radians where 0.0 is towards the
+     *                      front of the robot, and positive is clockwise.
+     * @param deltaTics (double) The number of tics the drive motor should mov e.
      */
     public void setRadiansAndDistance(double targetRadians, double deltaTics) {
         setRadians(targetRadians);

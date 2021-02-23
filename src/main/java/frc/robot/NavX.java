@@ -101,7 +101,6 @@ public class NavX {
      */
     public void setExpectedHeadingToCurrent() {
         m_expectedHeading = m_heading;
-
     }
 
     /**
@@ -143,17 +142,6 @@ public class NavX {
         if (setExpectedToCurrent) {
             m_expectedHeading = m_heading;
         }
-    }
-
-    /**
-     *
-     * @param heading (double) The current field heading of the robot in radians.
-     */
-    public void setHeading(double heading) {
-        // In the past we have always initialized with the front of the robot facing down field, so the
-        // heading was 0.0 at initialization. In this case we are
-        //
-
     }
 
     /**
