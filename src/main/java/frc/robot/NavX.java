@@ -38,11 +38,33 @@ public class NavX {
      */
     private double m_heading = 0.0;
     private boolean m_setExpectedToCurrent = false;
-    private double m_refPitch = 0.0;
-    private double m_refYaw = 0.0;
-    private double m_refRoll = 0.0;
-    private double  m_refHeading = 0.0;
 
+    // --------------------------------------------------
+    // Reference values - these are the values at initialization of the NavX recording the position of the robot
+    // on the field in terms of the readings of the NavX and the field heading of the robot at initialization. We
+    // refer to these as the reference values as everything that happens after initialization is evaluated
+    // with reference to (or as the change relative to this reference).
+    // --------------------------------------------------
+    /**
+     * The NavX reported pitch at the time the NavX in initialized.
+     */
+    private double m_refPitch = 0.0;
+    /**
+     * The NavX reported yaw at the time the NavX in initialized.
+     */
+    private double m_refYaw = 0.0;
+    /**
+     * The NavX reported roll at the time the NavX in initialized.
+     */
+    private double m_refRoll = 0.0;
+    /**
+     * The actual field heading of the robot at the time the NavX in initialized.
+     */
+    private double m_refHeading = 0.0;
+
+    /**
+     *
+     */
     private NavX() {
         // So, if there is no navx, there is no error - it just keeps trying to connect forever, so this
         // needs to be on a thread that can be killed if it doesn't connect in time ......
